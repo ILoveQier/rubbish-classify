@@ -1,126 +1,112 @@
 <template>
-  <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
+  <div class="index-container">
+    <div class="index-placehold">
+      <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/before-entry.jpg">
+      <span>小程序需要获取您的用户名和昵称哦</span>
     </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
+    <button class="begin"
+            open-type="getUserInfo"
+            @getuserinfo="handleUserInfo">信息授权</button>
   </div>
 </template>
-
 <script>
-import card from '@/components/card'
-
+import wxUtils from '../../utils/wxUtils.js'
+let api = require('../../../config/api.js')
 export default {
-  data () {
+  data() {
     return {
-      motto: 'Hello miniprograme',
-      userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
+      code: '',
+      userInfo: {},
+      userId: ''
     }
   },
-
-  components: {
-    card
+  onLoad() {
+    let user = wx.getStorageSync('userInfo');
+    wx.getSystemInfo({
+      success: function (res) {
+        wx.setStorageSync('screenWidth', res.screenWidth)
+      },
+    })
+    this.checkLogin()
   },
-
   methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      if (mpvuePlatform === 'wx') {
-        mpvue.switchTab({ url })
+    //检查登录状态
+    checkLogin: async function (e) {
+      let time = new Date()
+      let createTime = wx.getStorageSync('createTime')
+      let token = wx.getStorageSync('token')
+      if (!token || (time.getTime() - createTime > 10 * 3600 * 1000)) {
+        //不存在token,或者时间大于10分钟，调用登录
+        wx.login({
+          success: (res) => {
+            if (res.code) {
+              this.code = res.code
+            }
+          }
+        });
       } else {
-        mpvue.navigateTo({ url })
+        //token有效
+        wx.switchTab({
+          url: "/pages/home/main",
+        })
       }
     },
-    clickHandle (ev) {
-      console.log('clickHandle:', ev)
-      // throw {message: 'custom test'}
-    }
-  },
-
-  created () {
-    // let app = getApp()
+    handleUserInfo: async function (e) {
+      this.userInfo = e.mp.detail.userInfo;
+      if (this.userInfo) {
+        let { data, res } = await wxUtils.request(api.AuthLoginByWeixin, this, {
+          userInfo: e.mp.detail,
+          code: this.code,
+        })
+        //存储用户信息
+        wx.setStorageSync('userInfo', data.userInfo)
+        wx.setStorageSync('token', data.token)
+        wx.setStorageSync('userId', data.userId)
+        //将当前时间存到本地存储
+        let createTime = new Date();
+        wx.setStorageSync('createTime', createTime.getTime())
+        this.userId = data.userId
+        wx.switchTab({
+          url: "/pages/home/main",
+        });
+      } else {
+        wxUtils.showModal('登录失败', '请授权', { showCancel: false })
+      }
+    },
   }
-}
+};
 </script>
-
-<style scoped>
-.userinfo {
+<style lang="less" scope>
+.index-container {
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.userinfo-nickname {
-  color: #aaa;
-}
-
-.usermotto {
-  margin-top: 150px;
-}
-
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-.all{
-  width:7.5rem;
-  height:1rem;
-  background-color:blue;
-}
-.all:after{
-  display:block;
-  content:'';
-  clear:both;
-}
-.left{
-  float:left;
-  width:3rem;
-  height:1rem;
-  background-color:red;
-}
-
-.right{
-  float:left;
-  width:4.5rem;
-  height:1rem;
-  background-color:green;
+  justify-content: center;
+  padding-bottom: 300rpx;
+  box-sizing: border-box;
+  .begin {
+    width: 90%;
+    padding: 5rpx 0;
+    background-color: #1AAC19;
+    color: #fff;
+    margin-top: 30rpx;
+  }
+  .index-placehold {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    img {
+      width: 300rpx;
+      height: 250rpx;
+      margin-bottom: 30rpx;
+    }
+    span {
+      font-size: 30rpx;
+    }
+  }
 }
 </style>
