@@ -52,9 +52,11 @@ export default {
       justify-content: space-between;
       flex-wrap: wrap;
       span {
+        padding: 0 10rpx;
+        box-sizing: border-box;
         width: 150rpx;
         text-align: center;
-        font-size: 30rpx;
+        font-size: 25rpx;
         margin-bottom: 50rpx;
       }
     }

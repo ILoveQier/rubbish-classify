@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/catagory/main",
     "pages/home/main",
+    "pages/catagory/main",
     "pages/index/main",
     "pages/index/manager/main",
     "pages/index/user/main"
