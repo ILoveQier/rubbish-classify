@@ -44,7 +44,7 @@ export default {
   methods: {
     goPage(person) {
       wx.navigateTo({
-        url: '/pages/index/'+ person +'/main',
+        url: '/pages/index/' + person + '/main',
       });
     },
     //检查登录状态

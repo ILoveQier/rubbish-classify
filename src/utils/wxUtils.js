@@ -1,9 +1,10 @@
 import Vue from 'vue'
 
 export default {
-  showModal: function (title = '提示',
-    content = '',
-    { cancelText = '取消',
+  showModal: function (
+    { title = '提示',
+      content = '',
+      cancelText = '取消',
       confirmText = '确定',
       cancelColor = '#333',
       confirmColor = '#000',

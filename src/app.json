@@ -1,9 +1,9 @@
 {
   "pages": [
-    "pages/home/main",
+    "pages/index/user/main",
     "pages/index/main",
-    "pages/index/manager/main",
-    "pages/index/user/main"
+    "pages/home/main",
+    "pages/index/manager/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -24,14 +24,14 @@
       },
       {
         "pagePath": "pages/home/main",
-        "iconPath": "/static/tabs/home.png",
-        "selectedIconPath": "/static/tabs/home-active.png",
+        "iconPath": "/static/tabs/orders.png",
+        "selectedIconPath": "/static/tabs/orders-active.png",
         "text": "分类"
       },
       {
         "pagePath": "pages/home/main",
-        "iconPath": "/static/tabs/home.png",
-        "selectedIconPath": "/static/tabs/home-active.png",
+        "iconPath": "/static/tabs/my.png",
+        "selectedIconPath": "/static/tabs/my-active.png",
         "text": "个人中心"
       }
     ]
