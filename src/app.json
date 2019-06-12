@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/home/main",
     "pages/index/main",
     "pages/index/manager/main",
     "pages/index/user/main"
@@ -9,5 +10,30 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "垃圾分类",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#909399",
+    "selectedColor": "#000",
+    "position": "bottom",
+    "list": [
+      {
+        "pagePath": "pages/home/main",
+        "iconPath": "/static/tabs/home.png",
+        "selectedIconPath": "/static/tabs/home-active.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/home/main",
+        "iconPath": "/static/tabs/home.png",
+        "selectedIconPath": "/static/tabs/home-active.png",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/home/main",
+        "iconPath": "/static/tabs/home.png",
+        "selectedIconPath": "/static/tabs/home-active.png",
+        "text": "个人中心"
+      }
+    ]
   }
 }
