@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       index: 0,
-      items: ['家电', '纸张', '塑料'],
+      items: ['家电', '纸张', '塑料','金属', '衣服', '玻璃','厨余','其他','有毒有害'],
       itemsDetails: ['废旧吹风机', '废旧电冰箱', '废旧电风扇', '废旧吹风机', '废旧彩电', '废旧电风扇', '废旧吹风机', '废旧电冰箱', '废旧电风扇', '废旧冰箱', '废旧空调']
     }
   },
@@ -41,6 +41,7 @@ export default {
       span {
         padding: 30rpx;
         text-align: center;
+        color: #9C9C9C;
       }
     }
   }

@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/center/main",
     "pages/home/main",
     "pages/catagory/main",
     "pages/index/main",
@@ -30,7 +31,7 @@
         "text": "分类"
       },
       {
-        "pagePath": "pages/home/main",
+        "pagePath": "pages/center/main",
         "iconPath": "/static/tabs/my.png",
         "selectedIconPath": "/static/tabs/my-active.png",
         "text": "个人中心"

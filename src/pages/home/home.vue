@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <div v-if="temp"
+    <div v-if="role==='user'"
          class="home-item">
       <span>可回收垃圾0.8元/公斤兑换环保金
         厨余垃圾1/10公斤兑换环保金
@@ -10,18 +10,22 @@
     </div>
     <div v-else
          class="home-item">
-         <span></span>
+      <span></span>
       <div>自助投放</div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from "vuex"
+
 export default {
   data() {
     return {
-      temp: true
     }
   },
+  computed: mapState([
+    'role'
+  ]),
 }
 </script>
 
