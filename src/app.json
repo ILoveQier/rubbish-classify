@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/catagory/main",
     "pages/home/main",
     "pages/index/main",
     "pages/index/manager/main",
@@ -23,7 +24,7 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/home/main",
+        "pagePath": "pages/catagory/main",
         "iconPath": "/static/tabs/orders.png",
         "selectedIconPath": "/static/tabs/orders-active.png",
         "text": "分类"
