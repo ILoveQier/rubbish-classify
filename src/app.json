@@ -1,9 +1,9 @@
 {
   "pages": [
-    "pages/index/user/main",
-    "pages/index/main",
     "pages/home/main",
-    "pages/index/manager/main"
+    "pages/index/main",
+    "pages/index/manager/main",
+    "pages/index/user/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
