@@ -5,7 +5,7 @@
       <span>可回收垃圾0.8元/公斤兑换环保金
         厨余垃圾1/10公斤兑换环保金
         废旧大家电以实际上门看实物为准</span>
-      <div>预约上门</div>
+      <div @click="goBook">预约上门</div>
       <div>环保金提现</div>
     </div>
     <div v-else
@@ -26,6 +26,13 @@ export default {
   computed: mapState([
     'role'
   ]),
+  methods: {
+    goBook() {
+      wx.navigateTo({
+        url: '/pages/home/book/main',
+      })
+    }
+  },
 }
 </script>
 

@@ -8,5 +8,6 @@
 }
 span {
   font-family: PingFangSC-Regular, sans-serif;
+  font-size: 30rpx;
 }
 </style>
