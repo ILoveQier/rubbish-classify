@@ -32,11 +32,12 @@
         <picker @change="pickChange($event,'city')"
                 :range='city'>
           <div class="picker">
-            {{user.city}}
+            {{user.city || '--请选择--'}}
           </div>
         </picker>
       </div>
-      <div class="location-item">
+      <!-- todo 选择市之后发请求 获得区 再继续选择 -->
+      <!-- <div class="location-item">
         <span>所在行政区</span>
         <picker @change="pickChange($event,'city')"
                 :range='city'>
@@ -71,7 +72,7 @@
             {{user.city}}
           </div>
         </picker>
-      </div>
+      </div> -->
       <div class="location-item">
         <span>详细地址</span>
         <input type="text"

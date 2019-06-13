@@ -1,12 +1,12 @@
 {
   "pages": [
-    "pages/home/main",
     "pages/index/main",
+    "pages/index/user/main",
+    "pages/home/main",
     "pages/home/book/main",
     "pages/home/book/modifyLoc/main",
     "pages/center/main",
     "pages/catagory/main",
-    "pages/index/user/main",
     "pages/index/manager/main"
   ],
   "window": {
