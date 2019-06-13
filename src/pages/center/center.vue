@@ -1,8 +1,7 @@
 <template>
   <div class="center-container">
     <div class="center-info">
-      <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png"
-           alt="">
+      <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png">
       <div class="info-detail">
         <span>名字</span>
         <div v-if="role==='user'">

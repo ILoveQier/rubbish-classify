@@ -3,13 +3,15 @@
     <div class="left">
       <div class="left-wrap">
         <span v-for="(item,i) in items"
+              :key="i"
               @click="index=i"
               :style="{'backgroundColor':index===i?'#fff':'#e5e5e5'}">{{item}}</span>
       </div>
     </div>
     <div class="right">
       <div class="right-wrap">
-        <span v-for="item in itemsDetails">{{item}}</span>
+        <span v-for="item in itemsDetails"
+              :key="item">{{item}}</span>
         <span></span>
       </div>
     </div>
@@ -20,7 +22,7 @@ export default {
   data() {
     return {
       index: 0,
-      items: ['家电', '纸张', '塑料','金属', '衣服', '玻璃','厨余','其他','有毒有害'],
+      items: ['家电', '纸张', '塑料', '金属', '衣服', '玻璃', '厨余', '其他', '有毒有害'],
       itemsDetails: ['废旧吹风机', '废旧电冰箱', '废旧电风扇', '废旧吹风机', '废旧彩电', '废旧电风扇', '废旧吹风机', '废旧电冰箱', '废旧电风扇', '废旧冰箱', '废旧空调']
     }
   },
@@ -41,7 +43,7 @@ export default {
       span {
         padding: 30rpx;
         text-align: center;
-        color: #9C9C9C;
+        color: #9c9c9c;
       }
     }
   }
