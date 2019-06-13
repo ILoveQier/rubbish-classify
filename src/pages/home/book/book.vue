@@ -9,7 +9,8 @@
           </div>
           <div class="info-loc">
             <span style="width:300rpx">北京市西城区裕中西里xxxxxx</span>
-            <span style="color:blue">修改地址</span>
+            <span style="color:blue"
+                  @click="modifyLoc">修改地址</span>
           </div>
         </div>
         <div class="line"></div>
@@ -53,7 +54,8 @@
           <span style="flex:1">预估奖励</span>
           <div class="continue-add">
             <span>继续添加</span>
-            <span class="add" @click="showMask=true"></span>
+            <span class="add"
+                  @click="showMask=true"></span>
           </div>
         </div>
         <div class="add-wrap"
@@ -64,10 +66,12 @@
         <div v-else
              class="recycle-lists">
           <div v-for="(item,i) in recycleList"
+               :key="i"
                class="recycle-item">
             <span style="width:40%">{{item.good}}({{item.type === 'small'?item.weight:item.num+'个'}})</span>
             <span style="flex:1">7积分</span>
-            <span class="minus" @click="deleteRecycle(i)"></span>
+            <span class="minus"
+                  @click="deleteRecycle(i)"></span>
           </div>
         </div>
         <div class="leave-message">
@@ -84,7 +88,8 @@
         </div>
         <span>（实际环保金以上门评估为准）</span>
       </div>
-      <div class="right">确认预约</div>
+      <div class="right"
+           @click="confirm">确认预约</div>
     </div>
     <DrawerScreen :showMask='showMask'
                   @putRecycle='putRecycle'
@@ -94,6 +99,7 @@
 </template>
 <script>
 import DrawerScreen from './drawerScreen'
+import wxUtils from '../../../utils/wxUtils';
 export default {
   components: {
     DrawerScreen
@@ -110,7 +116,20 @@ export default {
       this.recycleList.push(item)
     },
     deleteRecycle(i) {
-      this.recycleList.splice(i,1)
+      this.recycleList.splice(i, 1)
+    },
+    modifyLoc() {
+      wx.navigateTo({
+        url: '/pages/home/book/modifyLoc/main',
+      })
+    },
+    confirm() {
+      wxUtils.showModal({ title: '温馨提示', content: '厨余垃圾不予上门回收服务可回收垃圾满5kg才可预约上门回收（除废旧大家电）回收物体不明确时请参考分类', confirmText: '立即预约' })
+        .then(res => {
+          if (res === 'confirm') {
+            wxUtils.showModal({ title: '预约成功', content: '管理员会尽快上门回收！', confirmText: '查看预约' })
+          }
+        })
     }
   },
 

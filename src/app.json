@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/home/book/main",
+    "pages/home/book/modifyLoc/main",
     "pages/home/main",
     "pages/center/main",
     "pages/catagory/main",
