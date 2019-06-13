@@ -9,7 +9,7 @@
           </div>
           <div class="info-loc">
             <span style="width:300rpx">北京市西城区裕中西里xxxxxx</span>
-            <span>修改地址</span>
+            <span style="color:blue">修改地址</span>
           </div>
         </div>
         <div class="line"></div>
@@ -43,10 +43,32 @@
         <span>请选择 > </span>
       </div>
       <div class="recycle-info">
-        <span style="width:100%">回收清单</span>
-        <div class="add-wrap">
+        <div class="recycle-title"
+             v-if="recycleList.length === 0">
+          回收清单
+        </div>
+        <div class="recycle-title"
+             v-else>
+          <span style="width:40%">回收清单</span>
+          <span style="flex:1">预估奖励</span>
+          <div class="continue-add">
+            <span>继续添加</span>
+            <span class="add" @click="showMask=true"></span>
+          </div>
+        </div>
+        <div class="add-wrap"
+             v-if="recycleList.length === 0">
           <button @click="showMask=true">立即添加</button>
           <span>请添加您需要上门回收的物品</span>
+        </div>
+        <div v-else
+             class="recycle-lists">
+          <div v-for="(item,i) in recycleList"
+               class="recycle-item">
+            <span style="width:40%">{{item.good}}({{item.type === 'small'?item.weight:item.num+'个'}})</span>
+            <span style="flex:1">7积分</span>
+            <span class="minus" @click="deleteRecycle(i)"></span>
+          </div>
         </div>
         <div class="leave-message">
           <textarea placeholder="留言备注：可描述物品状态、特殊要求等"
@@ -64,76 +86,34 @@
       </div>
       <div class="right">确认预约</div>
     </div>
+    <DrawerScreen :showMask='showMask'
+                  @putRecycle='putRecycle'
+                  @close='showMask=false'></DrawerScreen>
 
-    <div class="drawer-screen"
-         @click="showMask=false"
-         v-if="showMask"
-         data-statu="close">
-      <div class="drawer-box"
-           @click.stop>
-        <div class="drawer-title">
-          <span>添加废品</span>
-          <span class="close"
-                @click="showMask=false"></span>
-        </div>
-        <div class="drawer-content">
-          <div class="drawer-nav">
-            <div :class="{'selected':tab === 1}"
-                 class="nav"
-                 @click="tab=1">小件</div>
-            <div :class="{'selected':tab === 2}"
-                 class="nav"
-                 @click="tab=2">大件</div>
-          </div>
-          <div class="drawer-wrap">
-            <div v-if="tab===1"
-                 class="drawer-inner">
-              <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
-              <span>物品</span>
-              <div class="goods-wrap">
-                <span v-for="(item,i) in smallGoods"
-                      class="small-good"
-                      @click="smallGoodId=i"
-                      :class="{'small-selected':smallGoodId === i}">{{item}}</span>
-              </div>
-              <span>重量</span>
-              <div class="goods-wrap">
-                <span v-for="(item,i) in smallWeights"
-                      class="small-good"
-                      @click="smallWeightId=i"
-                      :class="{'small-selected':smallWeightId === i}">{{item}}</span>
-              </div>
-
-            </div>
-            <div v-else-if="tab===2"
-                 class="drawer-inner">2</div>
-          </div>
-        </div>
-        <div class="drawer-confirm">
-          <div class="left">
-            <div>
-              <span>预估环保金</span>
-              <span style="color:#FF915A;margin-left:20rpx">0</span>
-            </div>
-          </div>
-          <div class="right">加入回收清单</div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 <script>
+import DrawerScreen from './drawerScreen'
 export default {
+  components: {
+    DrawerScreen
+  },
   data() {
     return {
       showMask: false,
-      tab: 1,
-      smallGoods: ['玻璃', '废纸', '金属'],
-      smallWeights: ['0-10kg', '10-15kg', '15-20kg'],
-      smallGoodId: 0,
-      smallWeightId: 0
+      recycleList: []
     }
   },
+  methods: {
+    putRecycle(item) {
+      this.showMask = false
+      this.recycleList.push(item)
+    },
+    deleteRecycle(i) {
+      this.recycleList.splice(i,1)
+    }
+  },
+
 }
 </script>
 <style lang="less" scoped>
@@ -213,6 +193,73 @@ export default {
       align-items: center;
       background-color: #fff;
       padding: 20rpx 50rpx;
+      .recycle-title {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20rpx 0;
+        .continue-add {
+          display: flex;
+          align-items: center;
+          .add {
+            margin-left: 20rpx;
+            display: block;
+            width: 30rpx;
+            height: 30rpx;
+            border: 2rpx solid #000;
+            background-color: #000;
+            border-radius: 50%;
+            position: relative;
+            &:before,
+            &:after {
+              position: absolute;
+              left: 14rpx;
+              top: 5rpx;
+              content: " ";
+              height: 25rpx;
+              width: 5rpx;
+              background-color: #fff;
+            }
+            &:before {
+              transform: rotate(90deg);
+            }
+          }
+        }
+      }
+      .recycle-lists {
+        overflow: scroll;
+        width: 100%;
+        height: 300rpx;
+        margin-top: 30rpx;
+        margin-bottom: 50rpx;
+        .recycle-item {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 50rpx;
+
+          .minus {
+            display: block;
+            width: 30rpx;
+            height: 30rpx;
+            border: 2rpx solid #000;
+            border-radius: 50%;
+            position: relative;
+            &:before {
+              position: absolute;
+              left: 15rpx;
+              top: 5rpx;
+              content: " ";
+              height: 25rpx;
+              width: 5rpx;
+              background-color: #333;
+              transform: rotate(90deg);
+            }
+          }
+        }
+      }
       .add-wrap {
         margin: 50rpx 0;
         width: 60%;
@@ -235,8 +282,7 @@ export default {
       }
     }
   }
-  .book-confirm-wrap,
-  .drawer-confirm {
+  .book-confirm-wrap {
     width: 100%;
     height: 150rpx;
     display: flex;
@@ -259,106 +305,6 @@ export default {
       background-color: #339999;
       text-align: center;
       font-weight: bold;
-    }
-  }
-  .drawer-screen {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 99;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .drawer-box {
-      width: 90%;
-      height: 60%;
-      background-color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      .drawer-title {
-        width: 100%;
-        padding: 20rpx 0;
-        text-align: center;
-        position: relative;
-        .close {
-          position: absolute;
-          right: 30rpx;
-          top: 30rpx;
-          width: 30rpx;
-          height: 30rpx;
-        }
-        .close:before,
-        .close:after {
-          position: absolute;
-          left: 15rpx;
-          content: " ";
-          height: 30rpx;
-          width: 5rpx;
-          background-color: #333;
-        }
-        .close:before {
-          transform: rotate(45deg);
-        }
-        .close:after {
-          transform: rotate(-45deg);
-        }
-      }
-      .drawer-content {
-        margin-top: 30rpx;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        .drawer-nav {
-          display: flex;
-          align-items: center;
-          .nav {
-            border-bottom: 10rpx solid #fff;
-            width: 100rpx;
-            text-align: center;
-            margin-left: 50rpx;
-            font-size: 35rpx;
-          }
-          .selected {
-            border-bottom: 10rpx solid #339999;
-          }
-        }
-        .drawer-wrap {
-          padding: 20rpx 50rpx;
-          .drawer-inner {
-            display: flex;
-            flex-direction: column;
-            .goods-wrap {
-              margin: 20rpx 0;
-              display: flex;
-              align-items: center;
-              .small-good {
-                font-size: 22rpx;
-                padding: 10rpx 40rpx;
-                border-radius: 40rpx;
-                border: 2rpx solid #eee;
-                margin-right: 20rpx;
-              }
-              .small-selected {
-                background-color: #339999;
-                color: #fff;
-              }
-            }
-          }
-        }
-      }
-      .drawer-confirm {
-        height: 100rpx;
-        margin-top: 50rpx;
-        align-self: flex-end;
-        .right {
-          line-height: 100rpx;
-          font-size: 30rpx !important;
-        }
-      }
     }
   }
 }
