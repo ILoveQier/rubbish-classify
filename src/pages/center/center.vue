@@ -32,7 +32,19 @@
                class="right-flow">
           <div class="flow-item">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/go-door-active.png">
-            <span>管理员上门</span>
+            <span :class="role==='user'?'is-active':''">管理员上门</span>
+          </div>
+          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
+               class="right-flow">
+          <div class="flow-item">
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/estimate.png">
+            <span>核实清单</span>
+          </div>
+          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
+               class="right-flow">
+          <div class="flow-item">
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/score.png">
+            <span>环保金到账</span>
           </div>
         </div>
       </div>
@@ -111,7 +123,7 @@ export default {
       display: flex;
       flex-direction: column;
       .record-title {
-        font-size: 30rpx;
+        font-size: 25rpx;
         border-bottom: 2rpx solid #eee;
         display: flex;
         padding: 0 30rpx;
@@ -125,6 +137,7 @@ export default {
       display: flex;
       align-items: center;
       flex: 1;
+      padding-left: 50rpx;
       .right-flow {
         transform: translateY(-20rpx);
         width: 50rpx;
@@ -134,7 +147,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 0 20rpx;
+        padding: 0 10rpx;
         position: relative;
 
         img {
@@ -144,7 +157,7 @@ export default {
         span {
           margin-top: 10rpx;
           color: #bcbcbc;
-          font-size: 25rpx;
+          font-size: 23rpx;
         }
         i {
           position: absolute;
@@ -161,6 +174,9 @@ export default {
         }
       }
     }
+  }
+  .is-active {
+    color: #339999 !important;
   }
 }
 </style>
