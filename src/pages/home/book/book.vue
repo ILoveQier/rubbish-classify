@@ -45,7 +45,7 @@
       <div class="recycle-info">
         <span style="width:100%">回收清单</span>
         <div class="add-wrap">
-          <button>立即添加</button>
+          <button @click="showMask=true">立即添加</button>
           <span>请添加您需要上门回收的物品</span>
         </div>
         <div class="leave-message">
@@ -65,12 +65,75 @@
       <div class="right">确认预约</div>
     </div>
 
-    <div class="drawer_screen" @tap="powerDrawer" data-statu="close"></div>
+    <div class="drawer-screen"
+         @click="showMask=false"
+         v-if="showMask"
+         data-statu="close">
+      <div class="drawer-box"
+           @click.stop>
+        <div class="drawer-title">
+          <span>添加废品</span>
+          <span class="close"
+                @click="showMask=false"></span>
+        </div>
+        <div class="drawer-content">
+          <div class="drawer-nav">
+            <div :class="{'selected':tab === 1}"
+                 class="nav"
+                 @click="tab=1">小件</div>
+            <div :class="{'selected':tab === 2}"
+                 class="nav"
+                 @click="tab=2">大件</div>
+          </div>
+          <div class="drawer-wrap">
+            <div v-if="tab===1"
+                 class="drawer-inner">
+              <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
+              <span>物品</span>
+              <div class="goods-wrap">
+                <span v-for="(item,i) in smallGoods"
+                      class="small-good"
+                      @click="smallGoodId=i"
+                      :class="{'small-selected':smallGoodId === i}">{{item}}</span>
+              </div>
+              <span>重量</span>
+              <div class="goods-wrap">
+                <span v-for="(item,i) in smallWeights"
+                      class="small-good"
+                      @click="smallWeightId=i"
+                      :class="{'small-selected':smallWeightId === i}">{{item}}</span>
+              </div>
+
+            </div>
+            <div v-else-if="tab===2"
+                 class="drawer-inner">2</div>
+          </div>
+        </div>
+        <div class="drawer-confirm">
+          <div class="left">
+            <div>
+              <span>预估环保金</span>
+              <span style="color:#FF915A;margin-left:20rpx">0</span>
+            </div>
+          </div>
+          <div class="right">加入回收清单</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
-
+  data() {
+    return {
+      showMask: false,
+      tab: 1,
+      smallGoods: ['玻璃', '废纸', '金属'],
+      smallWeights: ['0-10kg', '10-15kg', '15-20kg'],
+      smallGoodId: 0,
+      smallWeightId: 0
+    }
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -172,7 +235,8 @@ export default {
       }
     }
   }
-  .book-confirm-wrap {
+  .book-confirm-wrap,
+  .drawer-confirm {
     width: 100%;
     height: 150rpx;
     display: flex;
@@ -195,6 +259,106 @@ export default {
       background-color: #339999;
       text-align: center;
       font-weight: bold;
+    }
+  }
+  .drawer-screen {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .drawer-box {
+      width: 90%;
+      height: 60%;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .drawer-title {
+        width: 100%;
+        padding: 20rpx 0;
+        text-align: center;
+        position: relative;
+        .close {
+          position: absolute;
+          right: 30rpx;
+          top: 30rpx;
+          width: 30rpx;
+          height: 30rpx;
+        }
+        .close:before,
+        .close:after {
+          position: absolute;
+          left: 15rpx;
+          content: " ";
+          height: 30rpx;
+          width: 5rpx;
+          background-color: #333;
+        }
+        .close:before {
+          transform: rotate(45deg);
+        }
+        .close:after {
+          transform: rotate(-45deg);
+        }
+      }
+      .drawer-content {
+        margin-top: 30rpx;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .drawer-nav {
+          display: flex;
+          align-items: center;
+          .nav {
+            border-bottom: 10rpx solid #fff;
+            width: 100rpx;
+            text-align: center;
+            margin-left: 50rpx;
+            font-size: 35rpx;
+          }
+          .selected {
+            border-bottom: 10rpx solid #339999;
+          }
+        }
+        .drawer-wrap {
+          padding: 20rpx 50rpx;
+          .drawer-inner {
+            display: flex;
+            flex-direction: column;
+            .goods-wrap {
+              margin: 20rpx 0;
+              display: flex;
+              align-items: center;
+              .small-good {
+                font-size: 22rpx;
+                padding: 10rpx 40rpx;
+                border-radius: 40rpx;
+                border: 2rpx solid #eee;
+                margin-right: 20rpx;
+              }
+              .small-selected {
+                background-color: #339999;
+                color: #fff;
+              }
+            }
+          }
+        }
+      }
+      .drawer-confirm {
+        height: 100rpx;
+        margin-top: 50rpx;
+        align-self: flex-end;
+        .right {
+          line-height: 100rpx;
+          font-size: 30rpx !important;
+        }
+      }
     }
   }
 }
