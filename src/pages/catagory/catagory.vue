@@ -26,6 +26,12 @@ export default {
       itemsDetails: ['废旧吹风机', '废旧电冰箱', '废旧电风扇', '废旧吹风机', '废旧彩电', '废旧电风扇', '废旧吹风机', '废旧电冰箱', '废旧电风扇', '废旧冰箱', '废旧空调']
     }
   },
+  onLoad() {
+    let item = [
+      { type: '废旧纸类', content: ['报纸', '图书'] },
+      { type: '废金属类', content: ['铁', '铜', '塑料线'] }
+    ]
+  }
 }
 </script>
 <style lang="less">
