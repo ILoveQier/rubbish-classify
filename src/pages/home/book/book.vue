@@ -268,7 +268,7 @@ export default {
             position: relative;
             &:before {
               position: absolute;
-              left: 15rpx;
+              left: 14rpx;
               top: 5rpx;
               content: " ";
               height: 25rpx;

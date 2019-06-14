@@ -13,10 +13,10 @@
         <div class="drawer-nav">
           <div :class="{'selected':tab === 1}"
                class="nav"
-               @click="tab=1">小件</div>
+               @click="tab=1">可回收小件</div>
           <div :class="{'selected':tab === 2}"
                class="nav"
-               @click="tab=2">大件</div>
+               @click="tab=2">可回收大件</div>
           <div :class="{'selected':tab === 3}"
                class="nav"
                @click="tab=3">厨余垃圾</div>
@@ -30,11 +30,21 @@
             <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
             <span>物品</span>
             <div class="goods-wrap">
-              <span v-for="(item,i) in smallGoods"
-                    :key="i"
-                    class="goods"
-                    @click="smallGoodId=i"
-                    :class="{'small-selected':smallGoodId === i}">{{item}}</span>
+              <div v-for="(item,i) in smallGoods"
+                   class="good-item"
+                   :key="i">
+                <span class="goods"
+                      :class="{'small-selected':smallGoodId === i}">{{item}}</span>
+                <div class="item-details"
+                     @click="clickItem(item,i)">{{smallGoodId === i?smallItem:''}}</div>
+                <div class="item-list"
+                     v-if="showItem && smallGoodId === i">
+                  <div v-for="item in itemList"
+                       class="val-item"
+                       @click="confirmVal(item)"
+                       :key='item'>{{item}}</div>
+                </div>
+              </div>
             </div>
             <span>重量</span>
             <div class="self-weight">
@@ -49,11 +59,21 @@
                class="drawer-inner">
             <span>物品</span>
             <div class="goods-wrap">
-              <span v-for="(item,i) in bigGoods"
-                    :key="i"
-                    class="goods"
-                    @click="bigGoodId=i"
-                    :class="{'small-selected':bigGoodId === i}">{{item}}</span>
+              <div v-for="(item,i) in bigGoods"
+                   class="good-item"
+                   :key="i">
+                <span class="goods"
+                      :class="{'small-selected':bigGoodId === i}">{{item}}</span>
+                <div class="item-details"
+                     @click="clickBigItem(item,i)">{{bigGoodId === i?bigItem:''}}</div>
+                <div class="item-list"
+                     v-if="showBigItem && bigGoodId === i">
+                  <div v-for="item in itemList"
+                       class="val-item"
+                       @click="confirmBigVal(item)"
+                       :key='item'>{{item}}</div>
+                </div>
+              </div>
             </div>
             <span>数量</span>
             <div class="count">
@@ -109,15 +129,21 @@ export default {
   props: ['showMask'],
   data() {
     return {
+      showItem: false,
+      showWeight: false,
+      showBigItem: false,
       tab: 1,
       smallGoods: ['玻璃', '废纸', '金属'],
       smallGoodId: 0,
-      smallWeight: 1,
+      smallWeight: '',
       kitchenWeight: 1,
       otherWeight: 1,
       bigGoods: ['旧手机', '洗衣机', '旧冰箱', '旧彩电'],
       bigGoodId: 0,
       bigGoodNum: 1,
+      itemList: ['金', '银', '铜'],
+      smallItem: '',
+      bigItem: ''
     }
   },
   onUnload() {
@@ -125,6 +151,24 @@ export default {
     this.tab = 1
   },
   methods: {
+    confirmBigVal(item) {
+      this.showBigItem = !this.showBigItem
+      this.bigItem = item
+    },
+    confirmVal(item) {
+      this.showItem = !this.showItem
+      this.smallItem = item
+    },
+    clickBigItem(item, i) {
+      this.showBigItem = !this.showBigItem
+      this.bigGoodId = i
+      this.bigItem = ''
+    },
+    clickItem(item, i) {
+      this.showItem = !this.showItem
+      this.smallGoodId = i
+      this.smallItem = ''
+    },
     closeScreen() {
       this.$emit('close')
     },
@@ -209,11 +253,11 @@ export default {
       .drawer-nav {
         display: flex;
         align-items: center;
+        justify-content: space-around;
         .nav {
           border-bottom: 10rpx solid #fff;
-          width: 100rpx;
+          width: 120rpx;
           text-align: center;
-          margin-left: 50rpx;
           font-size: 25rpx;
         }
         .selected {
@@ -239,17 +283,63 @@ export default {
           .goods-wrap {
             margin: 20rpx 0;
             display: flex;
-            align-items: center;
-            .goods {
-              font-size: 22rpx;
-              padding: 10rpx 20rpx;
-              border-radius: 40rpx;
-              border: 2rpx solid #eee;
-              margin-right: 20rpx;
-            }
-            .small-selected {
-              background-color: #339999;
-              color: #fff;
+            flex-wrap: wrap;
+            .good-item {
+              display: flex;
+              align-items: center;
+              margin-right: 30rpx;
+              margin-bottom: 20rpx;
+              position: relative;
+              .item-list {
+                width: 100rpx;
+                max-height: 200rpx;
+                border: 2rpx solid blue;
+                background-color: #fff;
+                position: absolute;
+                right: 0;
+                top: 50rpx;
+                overflow: scroll;
+                z-index: 99;
+                .val-item {
+                  font-size: 25rpx;
+                  width: 100%;
+                  height: 50rpx;
+                  padding: 10rpx 0;
+                  text-align: center;
+                }
+              }
+              .item-details {
+                width: 100rpx;
+                height: 40rpx;
+                background-color: #fff;
+                border: 2rpx solid #eee;
+                position: relative;
+                text-indent: 20rpx;
+                font-size: 20rpx;
+                line-height: 40rpx;
+                &::after {
+                  content: "";
+                  position: absolute;
+                  right: 10rpx;
+                  top: 15rpx;
+                  font-size: 0;
+                  line-height: 0;
+                  border-width: 5px;
+                  border-color: #000;
+                  border-bottom-width: 0;
+                  border-style: dashed;
+                  border-top-style: solid;
+                  border-left-color: transparent;
+                  border-right-color: transparent;
+                }
+              }
+              .goods {
+                font-size: 22rpx;
+                margin-right: 5rpx;
+              }
+              .small-selected {
+                color: red;
+              }
             }
           }
           .count {

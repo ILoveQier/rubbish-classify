@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/home/book/main",
     "pages/home/self/main",
+    "pages/home/book/main",
     "pages/home/self/otherLoc/main",
     "pages/home/main",
     "pages/index/main",
