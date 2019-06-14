@@ -17,6 +17,12 @@
           <div :class="{'selected':tab === 2}"
                class="nav"
                @click="tab=2">大件</div>
+          <div :class="{'selected':tab === 3}"
+               class="nav"
+               @click="tab=3">厨余垃圾</div>
+          <div :class="{'selected':tab === 4}"
+               class="nav"
+               @click="tab=4">其他垃圾</div>
         </div>
         <div class="drawer-wrap">
           <div v-if="tab===1"
@@ -31,12 +37,11 @@
                     :class="{'small-selected':smallGoodId === i}">{{item}}</span>
             </div>
             <span>重量</span>
-            <div class="goods-wrap">
-              <span v-for="(item,i) in smallWeights"
-                    :key="i"
-                    class="goods"
-                    @click="smallWeightId=i"
-                    :class="{'small-selected':smallWeightId === i}">{{item}}</span>
+            <div class="self-weight">
+              <input type="number"
+                     maxlength="4"
+                     v-model="smallWeight">
+              <span>KG</span>
             </div>
 
           </div>
@@ -61,6 +66,29 @@
               <span style="padding-left:20rpx;">个</span>
             </div>
           </div>
+          <div v-else-if="tab===3"
+               class="drawer-inner">
+            <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
+            <span>重量</span>
+            <div class="self-weight">
+              <input type="number"
+                     maxlength="4"
+                     v-model="kitchenWeight">
+              <span>KG</span>
+            </div>
+
+          </div>
+          <div v-else-if="tab===4"
+               class="drawer-inner">
+            <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
+            <span>重量</span>
+            <div class="self-weight">
+              <input type="number"
+                     maxlength="4"
+                     v-model="otherWeight">
+              <span>KG</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="drawer-confirm">
@@ -83,9 +111,10 @@ export default {
     return {
       tab: 1,
       smallGoods: ['玻璃', '废纸', '金属'],
-      smallWeights: ['0-10kg', '10-15kg', '15-20kg'],
       smallGoodId: 0,
-      smallWeightId: 0,
+      smallWeight: 1,
+      kitchenWeight: 1,
+      otherWeight: 1,
       bigGoods: ['旧手机', '洗衣机', '旧冰箱', '旧彩电'],
       bigGoodId: 0,
       bigGoodNum: 1,
@@ -105,19 +134,27 @@ export default {
         // 代表是小件
         item.type = 'small'
         item.good = this.smallGoods[this.smallGoodId]
-        item.weight = this.smallWeights[this.smallWeightId]
-      } else {
+        item.weight = this.smallWeight
+      } else if (this.tab === 2) {
         // 大件
         item.type = 'big'
         item.good = this.bigGoods[this.bigGoodId]
         item.num = this.bigGoodNum
+      } else if (this.tab === 3) {
+        // 厨余垃圾
+        item.type = 'kitchen'
+        item.kitchenWeight = this.kitchenWeight
+      } else if (this.tab === 4) {
+        // 其他垃圾
+        item.type = 'other'
+        item.otherWeight = this.otherWeight
       }
       this.$emit('putRecycle', item)
     }
   },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .drawer-screen {
   width: 100%;
   height: 100%;
@@ -177,7 +214,7 @@ export default {
           width: 100rpx;
           text-align: center;
           margin-left: 50rpx;
-          font-size: 35rpx;
+          font-size: 25rpx;
         }
         .selected {
           border-bottom: 10rpx solid #339999;
@@ -188,6 +225,17 @@ export default {
         .drawer-inner {
           display: flex;
           flex-direction: column;
+          .self-weight {
+            margin-top: 20rpx;
+            display: flex;
+            align-items: center;
+            input {
+              text-align: center;
+              width: 100rpx;
+              border: 2rpx solid #eee;
+              margin-right: 30rpx;
+            }
+          }
           .goods-wrap {
             margin: 20rpx 0;
             display: flex;

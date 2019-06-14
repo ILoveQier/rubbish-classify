@@ -11,7 +11,7 @@
     <div v-else
          class="home-item">
       <span></span>
-      <div>自助投放</div>
+      <div @click="goSelf">自助投放</div>
     </div>
   </div>
 </template>
@@ -30,6 +30,11 @@ export default {
     goBook() {
       wx.navigateTo({
         url: '/pages/home/book/main',
+      })
+    },
+    goSelf() {
+      wx.navigateTo({
+        url: '/pages/home/self/main',
       })
     }
   },
