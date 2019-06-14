@@ -25,26 +25,38 @@
         </div>
         <div class="record-flows">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/finish-book.png">
-            <span>预约完成</span>
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/appointment.png">
+            <span>我的预约</span>
           </div>
-          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
-               class="right-flow">
+        </div>
+      </div>
+      <div class="record-item">
+        <div class="record-title">
+          <span>我的环保金</span>
+        </div>
+        <div class="record-flows">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/go-door-active.png">
-            <span :class="role==='user'?'is-active':''">管理员上门</span>
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/money-withdraw.png">
+            <span>环保金提现</span>
           </div>
-          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
-               class="right-flow">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/estimate.png">
-            <span>核实清单</span>
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/money-detail.png">
+            <span>环保金明细</span>
           </div>
-          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
-               class="right-flow">
+        </div>
+      </div>
+      <div class="record-item">
+        <div class="record-title">
+          <span>我的资料</span>
+        </div>
+        <div class="record-flows">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/score.png">
-            <span>环保金到账</span>
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/personal-info.png">
+            <span>个人信息</span>
+          </div>
+          <div class="flow-item">
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/loc-manage.png">
+            <span>地址管理</span>
           </div>
         </div>
       </div>
@@ -78,6 +90,8 @@ export default {
   computed: mapState([
     'role'
   ]),
+  onLoad() {
+  }
 }
 </script>
 <style lang="less">
@@ -122,6 +136,7 @@ export default {
       height: 200rpx;
       display: flex;
       flex-direction: column;
+      margin-bottom: 30rpx;
       .record-title {
         font-size: 25rpx;
         border-bottom: 2rpx solid #eee;
@@ -147,7 +162,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 0 10rpx;
+        width: 150rpx;
         position: relative;
 
         img {
