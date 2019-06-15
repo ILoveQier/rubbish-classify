@@ -1,13 +1,13 @@
 {
   "pages": [
     "pages/center/personalInfo/main",
+    "pages/index/user/main",
     "pages/center/main",
     "pages/home/main",
     "pages/index/main",
     "pages/home/self/main",
     "pages/home/book/main",
     "pages/home/self/otherLoc/main",
-    "pages/index/user/main",
     "pages/home/book/modifyLoc/main",
     "pages/catagory/main",
     "pages/index/manager/main"

@@ -96,7 +96,12 @@
                style="width:200rpx;"
                placeholder="请输入"
                placeholder-style='font-size:20rpx;'>
-        <button>获取</button>
+        <div v-if="isGetQR"
+             style="font-size:30rpx;margin-left:30rpx;color:#999">
+          倒计时：{{timer}}s
+        </div>
+        <button @click="getQR"
+                v-else>获取</button>
       </div>
     </div>
     <button class="finish"
@@ -112,6 +117,9 @@ import wxUtils from '../../../utils/wxUtils';
 export default {
   data() {
     return {
+      isGetQR: false,
+      timer: 30,
+      timeOpt: null,
       city: ['北京', '上海'],
       user: {
         name: '',
@@ -123,6 +131,18 @@ export default {
     }
   },
   methods: {
+    getQR() {
+      this.isGetQR = true
+      this.timeOpt = setInterval(() => {
+        this.timer--
+        if (this.timer === 0) {
+          this.isGetQR = false
+          this.timer = 30
+          clearInterval(this.timeOpt)
+          return
+        }
+      }, 1000);
+    },
     radioChange: function (e) {
       this.user.gender = e.mp.detail.value
     },
