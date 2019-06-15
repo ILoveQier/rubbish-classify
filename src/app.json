@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/center/personalMoney/main",
     "pages/center/main",
+    "pages/center/personalMoney/main",
     "pages/center/personalLoc/main",
     "pages/center/personalInfo/main",
     "pages/index/user/main",
