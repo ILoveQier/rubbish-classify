@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/center/personalInfo/main",
     "pages/center/main",
     "pages/home/main",
     "pages/index/main",

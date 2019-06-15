@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="line"></div>
-        <div class="info-flows">
+        <!-- <div class="info-flows">
           <div class="flow-item">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/finish-book.png">
             <span>填写预约</span>
@@ -37,7 +37,7 @@
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/score.png">
             <span>积分到账</span>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="time-info">
         <span>预约时间</span>

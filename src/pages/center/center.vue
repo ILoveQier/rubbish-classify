@@ -50,7 +50,7 @@
           <span>我的资料</span>
         </div>
         <div class="record-flows">
-          <div class="flow-item">
+          <div class="flow-item" @click="goDetail('personalInfo')">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/personal-info.png">
             <span>个人信息</span>
           </div>
@@ -90,8 +90,13 @@ export default {
   computed: mapState([
     'role'
   ]),
-  onLoad() {
-  }
+  methods: {
+    goDetail(type){
+      wx.navigateTo({
+        url: '/pages/center/' + type + '/main',
+      });
+    }
+  },
 }
 </script>
 <style lang="less">
@@ -152,7 +157,6 @@ export default {
       display: flex;
       align-items: center;
       flex: 1;
-      padding-left: 50rpx;
       .right-flow {
         transform: translateY(-20rpx);
         width: 50rpx;
