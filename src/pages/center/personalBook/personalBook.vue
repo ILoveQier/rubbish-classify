@@ -20,14 +20,15 @@
       </div>
       <div class="personal-book-wrap">
         <div class=" personal-book-inner"
-             v-for="i in 25">
+             v-for="(item,i) in 25"
+             :key="i">
           <div class="book-info">
             <div>
-              <span style="margin-right:30rpx">预约单号</span>
+              <span style="margin-right:30rpx">预约单号:</span>
               <span>2767346328</span>
             </div>
             <div>
-              <span style="margin-right:30rpx">预约时间</span>
+              <span style="margin-right:30rpx">预约时间:</span>
               <span>2019/05/30 07：00 - 11：00</span>
             </div>
             <div>
@@ -48,15 +49,30 @@
             </div>
           </div>
           <div class="book-cancel"
-               v-if="1===0"></div>
+               v-if="content === '2' || content === '3'">
+            <button @click="cancelBook">取消预约</button>
+          </div>
           <div class="book-finish"
-               v-if="1===0"></div>
+               v-if="content === '5'">
+            <div>
+              <span style="margin-right:30rpx">上门回收时间:</span>
+              <span>2019/05/30 07：00 - 11：00</span>
+            </div>
+            <div v-for="(item,index) in 3"
+                 :key="index">
+              <span style="margin-right:30rpx">玻璃</span>
+              <span style="margin-right:30rpx">6KG</span>
+              <span style="margin-right:10rpx">预估环保金</span>
+              <span style="color:#FF915A;">7</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import wxUtils from '../../../utils/wxUtils';
 export default {
   data() {
     return {
@@ -78,6 +94,11 @@ export default {
       } else if (type === 5) {
         this.content = '5'
       }
+    },
+    cancelBook() {
+      wxUtils.showModal({ content: '是否确认取消该预约？' }).then(res => {
+        
+      })
     }
   },
 }
@@ -121,7 +142,8 @@ export default {
       .personal-book-inner {
         margin-bottom: 20rpx;
         background-color: #d7d7d7;
-        .book-info {
+        .book-info,
+        .book-finish {
           width: 100%;
           padding: 10rpx 20rpx;
           box-sizing: border-box;
@@ -135,6 +157,22 @@ export default {
             top: 50%;
             transform: translateY(-50%);
           }
+        }
+        .book-cancel {
+          height: 2rpx;
+          background-color: #fff;
+          button {
+            float: right;
+            line-height: 40rpx;
+            border-radius: 50rpx;
+            border: 2rpx solid red;
+            color: red;
+            font-size: 20rpx;
+            margin: 20rpx;
+          }
+        }
+        .book-finish {
+          border-top: 2rpx solid #fff;
         }
       }
     }
