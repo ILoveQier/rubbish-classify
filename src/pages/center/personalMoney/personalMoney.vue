@@ -1,5 +1,5 @@
 <template>
-  <div class="money-container">
+  <div class="personal-money-container">
     <div class="my-money">我的环保金 <span style="color:#C18F0B;font-weight:bold">0</span></div>
     <div class="money-list-wrap">
       <span>环保金列表明细</span>
@@ -26,7 +26,7 @@ export default {
 } 
 </script>
 <style lang="less" scoped>
-.money-container {
+.personal-money-container {
   display: flex;
   background-color: #F2F2F2;
   width: 100vw;

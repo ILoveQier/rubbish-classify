@@ -21,10 +21,10 @@
       <div class="record-item">
         <div class="record-title">
           <span>我的预约</span>
-          <span>查看全部预约记录 ></span>
+          <span @click="goDetail('personalBook')">查看全部预约记录 ></span>
         </div>
         <div class="record-flows">
-          <div class="flow-item">
+          <div class="flow-item" @click="goDetail('personalBook')">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/appointment.png">
             <span>我的预约</span>
           </div>

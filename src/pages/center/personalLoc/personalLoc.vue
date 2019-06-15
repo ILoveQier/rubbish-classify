@@ -1,5 +1,5 @@
 <template>
-  <div class="modify-container">
+  <div class="personal-loc-container">
     <div class="location-info">
       <div class="location-item">
         <span>市</span>
@@ -62,7 +62,7 @@ export default {
 } 
 </script>
 <style lang="less" scoped>
-.modify-container {
+.personal-loc-container {
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;

@@ -1,5 +1,5 @@
 <template>
-  <div class="personal-container">
+  <div class="personal-info-container">
     <div class="user-info">
       <div class="user-item">
         <span>真实姓名</span>
@@ -112,7 +112,7 @@ export default {
 }
 </script>
 <style lang="less">
-.personal-container {
+.personal-info-container {
   background-color: #f2f2f2;
   width: 100vw;
   height: 100vh;
