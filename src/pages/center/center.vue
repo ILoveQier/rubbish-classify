@@ -39,7 +39,7 @@
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/money-withdraw.png">
             <span>环保金提现</span>
           </div>
-          <div class="flow-item">
+          <div class="flow-item"  @click="goDetail('personalMoney')">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/money-detail.png">
             <span>环保金明细</span>
           </div>
@@ -54,7 +54,7 @@
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/personal-info.png">
             <span>个人信息</span>
           </div>
-          <div class="flow-item">
+          <div class="flow-item" @click="goDetail('personalLoc')">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/loc-manage.png">
             <span>地址管理</span>
           </div>
