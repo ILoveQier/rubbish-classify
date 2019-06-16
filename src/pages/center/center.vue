@@ -66,10 +66,10 @@
       <div class="record-item">
         <div class="record-title">
           <span>我的订单</span>
-          <span>查看历史订单 ></span>
+          <span @click="goDetail('managerBook')">查看历史订单 ></span>
         </div>
         <div class="record-flows">
-          <div class="flow-item">
+          <div class="flow-item" @click="goDetail('managerBook')">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png">
             <span>我的订单</span>
             <i>1</i>
