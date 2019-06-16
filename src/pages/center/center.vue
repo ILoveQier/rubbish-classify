@@ -4,7 +4,7 @@
       <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png">
       <div class="info-detail">
         <span>名字</span>
-        <div v-if="role==='user'">
+        <div v-if="role==='user1'">
           <span>当前可提现环保金：216</span>
           <div>
             <span>文明积分：50</span>
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div v-if="role==='user'"
+    <div v-if="role==='user1'"
          class="center-record">
       <div class="record-item">
         <div class="record-title">
@@ -73,6 +73,17 @@
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png">
             <span>我的订单</span>
             <i>1</i>
+          </div>
+        </div>
+      </div>
+            <div class="record-item">
+        <div class="record-title">
+          <span>我的资料</span>
+        </div>
+        <div class="record-flows">
+          <div class="flow-item" @click="goDetail('managerLoc')">
+            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/loc-manage.png">
+            <span>居民地址</span>
           </div>
         </div>
       </div>

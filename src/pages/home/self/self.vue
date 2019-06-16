@@ -1,10 +1,10 @@
 <template>
   <div class="self-container">
-    <div class="self-item">
+    <div class="self-item"  @click="chooseOther('otherLoc')">
       <span>右安门街道服务站</span>
-      <span style="font-size:25rpx" @click="chooseOther">选择其他垃圾投放点 ></span>
+      <span style="font-size:25rpx">选择其他垃圾投放点 ></span>
     </div>
-    <div class="self-item">
+    <div class="self-item" @click="chooseOther('userInfo')">
       <span>选择居民信息</span>
       <span> ></span>
     </div>
@@ -70,9 +70,9 @@ export default {
     deleteRecycle(i) {
       this.recycleList.splice(i, 1)
     },
-    chooseOther() {
+    chooseOther(type) {
       wx.navigateTo({
-        url: '/pages/home/self/otherLoc/main',
+        url: '/pages/home/self/'+type+'/main',
       })
     }
   },
