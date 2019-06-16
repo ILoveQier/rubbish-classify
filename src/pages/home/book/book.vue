@@ -41,7 +41,20 @@
       </div>
       <div class="time-info">
         <span>预约时间</span>
-        <span>请选择 > </span>
+        <picker mode="date"
+                :start="diagDate"
+                end="2099-01-01"
+                @change="bookChange($event,'date')">
+          <span v-if="!bookDate">请选择月份 ↓ </span>
+          <span v-else>{{bookDate}} </span>
+        </picker>
+        <picker mode="time"
+                start="07:00"
+                end="21:59"
+                @change="bookChange($event,'time')">
+          <span v-if="!bookTime">请选择时间 ↓ </span>
+          <span v-else>{{bookTime}} </span>
+        </picker>
       </div>
       <div class="recycle-info">
         <div class="recycle-title"
@@ -104,13 +117,31 @@ export default {
   components: {
     DrawerScreen
   },
+  computed: {
+    diagDate: () => {
+      let year = new Date().getFullYear()
+      let month = new Date().getMonth() + 1
+      let day = new Date().getDate()
+      let res = year + '-' + (month < 10 ? '0' : '') + month + '-' + day
+      return res
+    },
+  },
   data() {
     return {
       showMask: false,
-      recycleList: []
+      recycleList: [],
+      bookDate: '',
+      bookTime: ''
     }
   },
   methods: {
+    bookChange(e, type) {
+      if (type === 'date') {
+        this.bookDate = e.mp.detail.value
+      } else {
+        this.bookTime = e.mp.detail.value
+      }
+    },
     putRecycle(item) {
       this.showMask = false
       this.recycleList.push(item)
