@@ -24,6 +24,7 @@
              :key="i">
           <div class="book-info"
                v-if="tab===2"
+               @click="goDetail('managerReview')"
                style="border-bottom:2rpx solid #fff;">
             <div style="display:flex;align-items:center;justify-content:space-between">
               <span style="margin-right:30rpx">姓名</span>
@@ -116,6 +117,11 @@ export default {
       } else if (type === 5) {
         this.content = '5'
       }
+    },
+    goDetail(type){
+      wx.navigateTo({
+        url: '/pages/center/' + type + '/main',
+      });
     },
     cancelBook() {
       wxUtils.showModal({ content: '是否确认接单' }).then(res => {
