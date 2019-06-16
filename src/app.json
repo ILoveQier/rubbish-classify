@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/center/managerBook/main",
     "pages/center/managerReview/main",
+    "pages/center/managerBook/main",
     "pages/center/main",
     "pages/home/self/main",
     "pages/home/self/userInfo/main",
