@@ -7,10 +7,10 @@
              @click="getBookStatus(1)">全部</div>
         <div :class="{'selected':tab === 2}"
              class="nav"
-             @click="getBookStatus(2)">待接单</div>
+             @click="getBookStatus(2)">未确认订单</div>
         <div :class="{'selected':tab === 3}"
              class="nav"
-             @click="getBookStatus(3)">已接单</div>
+             @click="getBookStatus(3)">已确认订单</div>
         <div :class="{'selected':tab === 4}"
              class="nav"
              @click="getBookStatus(4)">已取消</div>
@@ -22,6 +22,23 @@
         <div class=" manager-book-inner"
              v-for="(item,i) in infos"
              :key="i">
+          <div class="book-info"
+               v-if="tab===2"
+               style="border-bottom:2rpx solid #fff;">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="margin-right:30rpx">姓名</span>
+              <div>
+                <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/phone.png"
+                     style="width:50rpx;height:50rpx;vertical-align:middle">
+                <span>18301469837</span>
+              </div>
+            </div>
+            <div>
+              <span>辽宁省东港市孤山镇</span>
+              <span>XXXXXXXXXXXXXXXXXXXXXXXX</span>
+            </div>
+
+          </div>
           <div class="book-info">
             <div>
               <span style="margin-right:30rpx">预约单号:</span>
@@ -48,9 +65,10 @@
                     style="color:#0A9E96">已完成</span>
             </div>
           </div>
-          <div class="book-cancel"
-               v-if="content === '2' || content === '3'">
-            <button @click="cancelBook">取消预约</button>
+          <div class="book-confirm"
+               v-if="content === '2'||content === '3'">
+            <button @click="cancelBook" v-if="content === '2'">确认接单</button>
+            <button style="color:#999;border-color:#999" v-else>已确认接单</button>
           </div>
           <div class="book-finish"
                v-if="content === '5'">
@@ -78,7 +96,7 @@ export default {
     return {
       tab: 1,
       content: '',
-      infos:[1,2,3,5,2,5,2,2,22,2]
+      infos: [1, 2, 3, 5, 2, 5, 2, 2, 22, 2]
     }
   },
   onReachBottom() {
@@ -100,7 +118,7 @@ export default {
       }
     },
     cancelBook() {
-      wxUtils.showModal({ content: '是否确认取消该预约？' }).then(res => {
+      wxUtils.showModal({ content: '是否确认接单' }).then(res => {
 
       })
     }
@@ -136,9 +154,9 @@ export default {
 
       .nav {
         border-bottom: 10rpx solid #fff;
-        width: 100rpx;
+        width: 120rpx;
         text-align: center;
-        font-size: 30rpx;
+        font-size: 25rpx;
       }
       .selected {
         border-bottom: 10rpx solid #339999;
@@ -170,7 +188,7 @@ export default {
             transform: translateY(-50%);
           }
         }
-        .book-cancel {
+        .book-confirm {
           height: 2rpx;
           background-color: #fff;
           button {
