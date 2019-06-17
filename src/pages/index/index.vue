@@ -29,7 +29,7 @@ export default {
       code: '',
       userInfo: {},
       userId: '',
-      temp: false
+      temp: true
     }
   },
   onLoad() {
@@ -71,23 +71,36 @@ export default {
     handleUserInfo: async function (e) {
       this.userInfo = e.mp.detail.userInfo;
       if (this.userInfo) {
-        let { data, res } = await wxUtils.request(api.AuthLoginByWeixin, this, {
-          userInfo: e.mp.detail,
-          code: this.code,
-        })
+        // let { data, res } = await wxUtils.request(api.AuthLoginByWeixin, this, {
+        //   userInfo: e.mp.detail,
+        //   code: this.code,
+        // })
+        // todo
+        let data = {
+          "userInfo": {
+            "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132",
+            "city": "",
+            "gender": 1,
+            "nickName": "SKY",
+            "province": ""
+          },
+          "userId": 25,
+          "token": "v7ywu2zrcrgmlcrt2bwklw5zu4afqhm4",
+          "roleType": "普通用户"
+        }
         //存储用户信息
+        let userInfo = data.userInfo
+        userInfo.userId = data.userId
+        userInfo.roleType = data.roleType
         wx.setStorageSync('userInfo', data.userInfo)
         wx.setStorageSync('token', data.token)
-        wx.setStorageSync('userId', data.userId)
         //将当前时间存到本地存储
         let createTime = new Date()
         wx.setStorageSync('createTime', createTime.getTime())
         this.userId = data.userId
-        wx.switchTab({
-          url: "/pages/home/main",
-        })
+        this.temp = false
       } else {
-        wxUtils.showModal('登录失败', '请授权', { showCancel: false })
+        wxUtils.showModal({ title: '登录失败', content: '请授权', showCancel: false })
       }
     },
   }
