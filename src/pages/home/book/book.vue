@@ -130,7 +130,18 @@ export default {
       recycleList: [],
       bookDate: '',
       bookTime: '',
-      timeRange:['07:00-08:00','08:00-09:00','09:00-10:00']
+      timeRange: []
+    }
+  },
+  onLoad() {
+    // 初始化日期范围
+    for (let index = 1; index < 24; index++) {
+      let hour1 = ''
+      let hour2 = ''
+      hour1 = index < 10 ? '0' + index : index
+      hour2 = index < 9 ? '0' + (index+1) : (index+1)
+      let res = hour1+':00-'+hour2+':00'
+      this.timeRange.push(res)      
     }
   },
   methods: {
