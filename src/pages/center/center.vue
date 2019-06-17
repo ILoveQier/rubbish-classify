@@ -77,7 +77,7 @@
                @click="goDetail('managerBook')">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png">
             <span>我的订单</span>
-            <i>1</i>
+            <i>{{total}}</i>
           </div>
         </div>
       </div>
@@ -101,6 +101,7 @@ import { mapState } from "vuex"
 export default {
   data() {
     return {
+      total: 0,
       roleObj: {}
     }
   },
@@ -108,6 +109,12 @@ export default {
     'role'
   ]),
   async onLoad() {
+    this.$store.state.role = '分拣员'
+    if (this.role === '分拣员') {
+      // TODO 分拣员的预约单数量
+      // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrderCount, this)
+      this.total = 34
+    }
     // TODO 用户信息
     // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this)
     this.roleObj = {
@@ -133,7 +140,7 @@ export default {
   methods: {
     goDetail(type) {
       wx.navigateTo({
-        url: '/pages/center/' + type + '/main?roleObj='+JSON.stringify(this.roleObj),
+        url: '/pages/center/' + type + '/main?roleObj=' + JSON.stringify(this.roleObj),
       })
     }
   },
