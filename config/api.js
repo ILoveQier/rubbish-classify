@@ -13,4 +13,5 @@ module.exports = {
   SorterBind: API_BASE_URL + 'user/sorterBind', //分拣员登录
   GetCurrentUserInfo: API_BASE_URL + 'user/getCurrentUserInfo', //获取用户信息
   UpdateNormal: API_BASE_URL + 'user/updateNormal', //更新用户信息
+  GetGreenMoneyHistory: API_BASE_URL + 'recycle/getGreenMoneyHistory', //获取环保金明细
 };

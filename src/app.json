@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/center/personalMoney/main",
     "pages/center/main",
     "pages/index/user/main",
     "pages/index/main",
@@ -10,7 +11,6 @@
     "pages/home/self/main",
     "pages/home/self/userInfo/main",
     "pages/center/personalBook/main",
-    "pages/center/personalMoney/main",
     "pages/center/personalLoc/main",
     "pages/center/personalInfo/main",
     "pages/home/self/otherLoc/main",
