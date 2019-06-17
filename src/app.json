@@ -1,11 +1,11 @@
 {
   "pages": [
+    "pages/center/main",
     "pages/index/main",
     "pages/index/user/main",
     "pages/home/book/main",
     "pages/center/managerReview/main",
     "pages/home/main",
-    "pages/center/main",
     "pages/center/managerBook/main",
     "pages/home/self/main",
     "pages/home/self/userInfo/main",
