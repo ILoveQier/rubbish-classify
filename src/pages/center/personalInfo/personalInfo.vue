@@ -9,6 +9,7 @@
       <div class="user-item">
         <span>身份证号</span>
         <input type="idcard"
+               maxlength="18"
                v-model="user.idNum">
       </div>
       <div class="user-item">
@@ -64,7 +65,7 @@ export default {
       user: {
         realName: '',
         idNum: '',
-        gender: 1,
+        gender: 0,
         phone: '',
         phoneCode: '',
       }
@@ -105,11 +106,11 @@ export default {
         return
       }
       if (this.user.phone.length < 11) {
-        this.$wxUtils.showModal({ cotent: '您输入的手机号码有误，请重新输入，须为11位数字', showCancel: false })
+        this.$wxUtils.showModal({ content: '您输入的手机号码有误，须为11位数字', showCancel: false })
         return
       }
       for (const key in this.user) {
-        if (!this.user[key]) {
+        if (!this.user[key] && this.user[key] !== 0) {
           this.$wxUtils.showModal({ content: '请您补全信息', showCancel: false })
           return
         }

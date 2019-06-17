@@ -155,8 +155,8 @@ export default {
       user: {
         realName: '',
         idNum: '',
-        gender: 1,
-        addrId: '',
+        gender: 0,
+        addrId: '1',
         address: '',
         phone: '',
         phoneCode: '',
@@ -167,7 +167,7 @@ export default {
     //TODO 初始化地址cityList 和 buildingList
     // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this)
     for (let index = 1; index < 31; index++) {
-      this.addrObj.buildingList.push(index+'号楼')
+      this.addrObj.buildingList.push(index + '号楼')
     }
   },
   methods: {
@@ -231,7 +231,7 @@ export default {
         return
       }
       for (const key in this.user) {
-        if (!this.user[key]) {
+        if (!this.user[key] && this.user[key] !== 0) {
           this.$wxUtils.showModal({ content: '请您补全信息', showCancel: false })
           return
         }

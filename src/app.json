@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/center/main",
-    "pages/index/main",
     "pages/index/user/main",
+    "pages/index/main",
     "pages/home/book/main",
     "pages/center/managerReview/main",
     "pages/home/main",

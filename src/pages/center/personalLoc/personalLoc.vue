@@ -68,7 +68,7 @@
                   placeholder="必须详细到门牌号"></textarea>
       </div>
     </div>
-    <button>保存</button>
+    <button @click="saveLoc">保存</button>
   </div>
 </template>
 <script>
@@ -139,6 +139,18 @@ export default {
       }
 
     },
+    saveLoc() {
+      if (!this.loc.addrId) {
+        this.$wxUtils.showModal({ content: '请将地址填写完整', showCancel: false })
+        return
+      }
+      if (!this.loc.address) {
+        this.$wxUtils.showModal({ content: '请填写详细地址', showCancel: false })
+        return
+      }
+      // TODO 更新地址信息
+      // let { data } = await this.$wxUtils.request(this.$api.UpdateNormal, this,{...this.loc})
+    }
   },
 } 
 </script>
