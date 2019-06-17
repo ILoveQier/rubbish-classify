@@ -21,8 +21,6 @@
   </div>
 </template>
 <script>
-import wxUtils from '../../utils/wxUtils.js'
-let api = require('../../../config/api.js')
 export default {
   data() {
     return {
@@ -71,11 +69,11 @@ export default {
     handleUserInfo: async function (e) {
       this.userInfo = e.mp.detail.userInfo;
       if (this.userInfo) {
-        // let { data, res } = await wxUtils.request(api.AuthLoginByWeixin, this, {
+        // TODO 微信登陆
+        // let { data, res } = await this.$wxUtils.request(this.$api.AuthLoginByWeixin, this, {
         //   userInfo: e.mp.detail,
         //   code: this.code,
         // })
-        // todo
         let data = {
           "userInfo": {
             "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132",
@@ -100,7 +98,7 @@ export default {
         this.userId = data.userId
         this.temp = false
       } else {
-        wxUtils.showModal({ title: '登录失败', content: '请授权', showCancel: false })
+        this.$wxUtils.showModal({ title: '登录失败', content: '请授权', showCancel: false })
       }
     },
   }

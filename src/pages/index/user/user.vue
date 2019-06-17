@@ -4,12 +4,12 @@
       <div class="user-item">
         <span>真实姓名</span>
         <input type="text"
-               v-model="user.name">
+               v-model="user.realName">
       </div>
       <div class="user-item">
         <span>身份证号</span>
         <input type="idcard"
-               v-model="user.idcard">
+               v-model="user.idNum">
       </div>
       <div class="user-item">
         <span>性别</span>
@@ -30,52 +30,67 @@
       <div class="location-item">
         <span>所在市</span>
         <picker @change="pickChange($event,'city')"
-                :range='city'>
+                :range='addrObj.cityList'>
           <div class="picker">
-            {{user.city || '--请选择--'}}
+            {{addrObj.cityName || '--请选择--'}}
+          </div>
+        </picker>
+      </div>
+      <div class="location-item"
+           v-if="addrObj.cityName">
+        <span>所在行政区</span>
+        <picker @change="pickChange($event,'area')"
+                :range='addrObj.areaList'>
+          <div class="picker">
+            {{addrObj.areaName || '--请选择--'}}
           </div>
         </picker>
       </div>
       <!-- todo 选择市之后发请求 获得区 再继续选择 -->
-      <!-- <div class="location-item">
-        <span>所在行政区</span>
-        <picker @change="pickChange($event,'city')"
-                :range='city'>
-          <div class="picker">
-            {{user.city}}
-          </div>
-        </picker>
-      </div>
-      <div class="location-item">
+      <div class="location-item"
+           v-if="addrObj.areaName">
         <span>所在街道</span>
-        <picker @change="pickChange($event,'city')"
-                :range='city'>
+        <picker @change="pickChange($event,'street')"
+                :range='addrObj.streetList'>
           <div class="picker">
-            {{user.city}}
+            {{addrObj.streetName || '--请选择--'}}
           </div>
         </picker>
       </div>
-      <div class="location-item">
+      <div class="location-item"
+           v-if="addrObj.streetName">
+        <span>所在社区</span>
+        <picker @change="pickChange($event,'community')"
+                :range='addrObj.communityList'>
+          <div class="picker">
+            {{addrObj.communityName || '--请选择--'}}
+          </div>
+        </picker>
+      </div>
+      <div class="location-item"
+           v-if="addrObj.communityName">
         <span>所在小区</span>
-        <picker @change="pickChange($event,'city')"
-                :range='city'>
+        <picker @change="pickChange($event,'small')"
+                :range='addrObj.smallList'>
           <div class="picker">
-            {{user.city}}
+            {{addrObj.smallName || '--请选择--'}}
           </div>
         </picker>
       </div>
-      <div class="location-item">
-        <span>所在楼</span>
-        <picker @change="pickChange($event,'city')"
-                :range='city'>
+      <div class="location-item"
+           v-if="addrObj.smallName">
+        <span>所在号楼</span>
+        <picker @change="pickChange($event,'building')"
+                :range='addrObj.buildingList'>
           <div class="picker">
-            {{user.city}}
+            {{addrObj.buildingName || '--请选择--'}}
           </div>
         </picker>
-      </div> -->
+      </div>
       <div class="location-item">
         <span>详细地址</span>
         <input type="text"
+               v-model="user.address"
                placeholder-style='font-size:20rpx;text-align:center'
                placeholder="必须详细到门牌号">
       </div>
@@ -93,6 +108,7 @@
         <span>短信验证码</span>
         <input type="number"
                maxlength="10"
+               v-model="user.phoneCode"
                style="width:200rpx;"
                placeholder="请输入"
                placeholder-style='font-size:20rpx;'>
@@ -113,22 +129,45 @@
   </div>
 </template>
 <script>
-import wxUtils from '../../../utils/wxUtils';
 export default {
   data() {
     return {
       isGetQR: false,
       timer: 30,
       timeOpt: null,
-      city: ['北京', '上海'],
+      addrObj: {
+        // 请求列表
+        cityList: ['北京', '上海'],
+        areaList: ['西城区', '朝阳区', '海淀区', '昌平区'],
+        streetList: ['西城区', '朝阳区', '海淀区', '昌平区'],
+        communityList: ['西城区', '朝阳区', '海淀区', '昌平区'],
+        smallList: ['西城区', '朝阳区', '海淀区', '昌平区'],
+        buildingList: [],
+        // 选择的值
+        cityName: '',
+        areaName: '',
+        streetName: '',
+        communityName: '',
+        smallName: '',
+        buildingName: ''
+      },
       user: {
-        name: '',
-        idcard: '',
+        realName: '',
+        idNum: '',
         gender: 1,
-        city: '',
-        phone: ''
+        address: '',
+        phone: '',
+        phoneCode: '',
+        addrId: '',
       }
     }
+  },
+  onLoad() {
+    //TODO 初始化地址cityList
+    for (let index = 1; index < 31; index++) {
+      this.addrObj.buildingList.push(index)
+    }
+    // let { data } = await $wxUtils.request($api.GetChildrenArea, this)
   },
   methods: {
     getQR() {
@@ -147,19 +186,23 @@ export default {
       this.user.gender = e.mp.detail.value
     },
     pickChange: function (e, type) {
-      if (type === 'city') {
-        this.user.city = this.city[e.mp.detail.value]
-      }
+      let val = e.mp.detail.value
+      this.addrObj[type + 'Name'] = this.addrObj[type + 'List'][val]
+      //TODO 选择城市后查询areaList接口
+      // let { data } = await $wxUtils.request($api.GetChildrenArea, this, { 'cityName': this.addrObj.cityName })
     },
-    finishRegister() {
+    async finishRegister() {
       if (this.user.phone.length < 11) {
-        wxUtils.showModal({ content: '您输入的手机号码有误，请重新输入，须为11位数字', showCancel: false })
+        this.$wxUtils.showModal({ content: '您输入的手机号码有误，请重新输入，须为11位数字', showCancel: false })
+        return
       }
+      // TODO 用户注册
+      // let { data } = await this.$wxUtils.request(this.$api.UserRegister, this,{...this.user})
     }
   },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .user-container {
   background-color: #f2f2f2;
   width: 100vw;
@@ -209,7 +252,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 20rpx 0;
+      padding: 10rpx 0;
       input {
         flex: 1;
         margin-left: 60rpx;
