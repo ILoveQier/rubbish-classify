@@ -119,13 +119,16 @@ export default {
     align-items: center;
     flex-direction: column;
     .personal-book-nav {
+      width: 100%;
+      padding: 0 30rpx;
+      box-sizing: border-box;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       .nav {
         border-bottom: 10rpx solid #fff;
         width: 100rpx;
         text-align: center;
-        margin-left: 50rpx;
         font-size: 30rpx;
       }
       .selected {
