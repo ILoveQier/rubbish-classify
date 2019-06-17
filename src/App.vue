@@ -10,4 +10,7 @@ span {
   font-family: PingFangSC-Regular, sans-serif;
   font-size: 30rpx;
 }
+div {
+  font-size: 25rpx;
+}
 </style>

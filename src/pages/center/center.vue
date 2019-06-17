@@ -114,7 +114,7 @@ export default {
       "nickName": "sky",
       "userName": "sky",
       "realName": "小凡",
-      "gender": "男",
+      "gender": "0",
       "phone": "13622103217",
       "idNum": "110226199402123487",
       "addrCity": "北京市",
@@ -133,7 +133,7 @@ export default {
   methods: {
     goDetail(type) {
       wx.navigateTo({
-        url: '/pages/center/' + type + '/main',
+        url: '/pages/center/' + type + '/main?roleObj='+JSON.stringify(this.roleObj),
       })
     }
   },

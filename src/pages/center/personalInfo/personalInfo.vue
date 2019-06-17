@@ -4,38 +4,26 @@
       <div class="user-item">
         <span>真实姓名</span>
         <input type="text"
-               v-model="user.name">
+               v-model="user.realName">
       </div>
       <div class="user-item">
         <span>身份证号</span>
         <input type="idcard"
-               v-model="user.idcard">
+               v-model="user.idNum">
       </div>
       <div class="user-item">
         <span>性别</span>
         <radio-group class="radio-group"
                      @change="radioChange">
           <label class="radio">
-            <radio value="1"
-                   :checked='user.gender==1' />男
+            <radio value='0'
+                   :checked='user.gender==0' />男
           </label>
           <label class="radio">
-            <radio value="0"
-                   :checked='user.gender==0' />女
+            <radio value='1'
+                   :checked='user.gender==1' />女
           </label>
         </radio-group>
-      </div>
-      <div class="user-item">
-        <span>生日</span>
-        <picker mode="date"
-                style="width:60%"
-                start="1910-01-01"
-                end="2019-09-01"
-                @change="bindDateChange">
-          <input type="text"
-                 style="width:100%"
-                 :value="user.birthday">
-        </picker>
       </div>
       <div class="user-item">
         <span>绑定手机号</span>
@@ -48,6 +36,7 @@
       <div class="user-item">
         <span>短信验证码</span>
         <input type="number"
+               v-model="user.phoneCode"
                maxlength="10"
                style="width:200rpx;"
                placeholder="请输入"
@@ -66,25 +55,36 @@
   </div>
 </template>
 <script>
-import wxUtils from '../../../utils/wxUtils';
 export default {
   data() {
     return {
       isGetQR: false,
       timer: 30,
       timeOpt: null,
-      city: ['北京', '上海'],
       user: {
-        name: '',
-        idcard: '',
+        realName: '',
+        idNum: '',
         gender: 1,
         phone: '',
-        birthday: ''
+        phoneCode: '',
       }
     }
   },
+  onLoad() {
+    let roleObj = JSON.parse(this.$getRoute().roleObj)
+    this.user = {
+      realName: roleObj.realName,
+      idNum: roleObj.idNum,
+      gender: roleObj.gender,
+      phone: roleObj.phone,
+    }
+  },
   methods: {
-    getQR() {
+    async getQR() {
+      if (!this.user.phone || this.user.phone.length < 11) {
+        let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+        return
+      }
       this.isGetQR = true
       this.timeOpt = setInterval(() => {
         this.timer--
@@ -99,14 +99,23 @@ export default {
     radioChange: function (e) {
       this.user.gender = e.mp.detail.value
     },
-    bindDateChange: function (e) {
-      this.user.birthday = e.mp.detail.value
-
-    },
     save() {
-      if (this.user.phone.length < 11) {
-        wxUtils.showModal({ content: '您输入的手机号码有误，请重新输入，须为11位数字', showCancel: false })
+      if (this.user.idNum.length < 18) {
+        this.$wxUtils.showModal({ content: '您输入的身份证号码有误，须为18位数字', showCancel: false })
+        return
       }
+      if (this.user.phone.length < 11) {
+        this.$wxUtils.showModal({ cotent: '您输入的手机号码有误，请重新输入，须为11位数字', showCancel: false })
+        return
+      }
+      for (const key in this.user) {
+        if (!this.user[key]) {
+          this.$wxUtils.showModal({ content: '请您补全信息', showCancel: false })
+          return
+        }
+      }
+      // TODO 更新用户信息
+      // let { data } = await this.$wxUtils.request(this.$api.UpdateNormal, this,{...this.user})
     }
   },
 }
@@ -119,6 +128,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 25rpx;
   input {
     background-color: #fff;
     border: 2rpx solid #797979;

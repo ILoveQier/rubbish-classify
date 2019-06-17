@@ -17,12 +17,12 @@
         <radio-group class="radio-group"
                      @change="radioChange">
           <label class="radio">
-            <radio value="1"
-                   :checked='user.gender==1' />男
+            <radio value="0"
+                   :checked='user.gender==0' />男
           </label>
           <label class="radio">
-            <radio value="0"
-                   :checked='user.gender==0' />女
+            <radio value="1"
+                   :checked='user.gender==1' />女
           </label>
         </radio-group>
       </div>
@@ -78,8 +78,7 @@
           </div>
         </picker>
       </div>
-      <div class="location-item"
-           v-if="addrObj.smallName">
+      <div class="location-item">
         <span>所在号楼</span>
         <picker @change="pickChange($event,'building')"
                 :range='addrObj.buildingList'>
@@ -133,6 +132,7 @@
 export default {
   data() {
     return {
+      nameList: ['cityName', 'areaName', 'streetName', 'communityName', 'smallName'],
       isGetQR: false,
       timer: 30,
       timeOpt: null,
@@ -156,24 +156,24 @@ export default {
         realName: '',
         idNum: '',
         gender: 1,
+        addrId: '',
         address: '',
         phone: '',
         phoneCode: '',
-        addrId: '',
       }
     }
   },
   async onLoad() {
     //TODO 初始化地址cityList 和 buildingList
-    // let { data } = await $wxUtils.request($api.GetChildrenArea, this)
+    // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this)
     for (let index = 1; index < 31; index++) {
-      this.addrObj.buildingList.push(index)
+      this.addrObj.buildingList.push(index+'号楼')
     }
   },
   methods: {
     async getQR() {
       if (!this.user.phone || this.user.phone.length < 11) {
-        let { data } = await $wxUtils.request($api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+        let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
         return
       }
       this.isGetQR = true
@@ -192,9 +192,34 @@ export default {
     },
     pickChange: function (e, type) {
       let val = e.mp.detail.value
-      this.addrObj[type + 'Name'] = this.addrObj[type + 'List'][val]
-      //TODO 选择城市后查询areaList接口
-      // let { data } = await $wxUtils.request($api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
+      let name = type + 'Name'
+      let list = type + 'List'
+      // 如果变动了其中之一
+      if (this.addrObj[name] !== this.addrObj[list][val] && name !== 'smallName') {
+        let index = this.nameList.indexOf(name) + 1
+        // 把变动的之后值清空
+        for (let i = index; i < this.nameList.length; i++) {
+          this.addrObj[this.nameList[i]] = ''
+        }
+        this.addrObj[name] = this.addrObj[list][val]
+        // 把变动的之前值保留
+        let obj = {}
+        for (let i2 = 0; i2 < index; i2++) {
+          obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
+        }
+        // todo 发送查询地址请求
+        // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
+      }
+      if (this.addrObj[name] !== this.addrObj[list][val] && name === 'smallName') {
+        this.addrObj[name] = this.addrObj[list][val]
+        let obj = {}
+        for (let i2 = 0; i2 < this.nameList.length; i2++) {
+          obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
+        }
+        // todo 如果只改动了最后的小区 那么就发请求获得addrId
+        // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
+      }
+
     },
     async finishRegister() {
       if (this.user.idNum.length < 18) {

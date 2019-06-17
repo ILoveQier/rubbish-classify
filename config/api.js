@@ -12,4 +12,5 @@ module.exports = {
   UserRegister: API_BASE_URL + 'user/register', //普通用户注册
   SorterBind: API_BASE_URL + 'user/sorterBind', //分拣员登录
   GetCurrentUserInfo: API_BASE_URL + 'user/getCurrentUserInfo', //获取用户信息
+  UpdateNormal: API_BASE_URL + 'user/updateNormal', //更新用户信息
 };
