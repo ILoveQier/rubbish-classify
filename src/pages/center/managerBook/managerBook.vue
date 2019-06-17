@@ -24,7 +24,6 @@
              :key="i">
           <div class="book-info"
                v-if="tab===2"
-               @click="goDetail('managerReview')"
                style="border-bottom:2rpx solid #fff;">
             <div style="display:flex;align-items:center;justify-content:space-between">
               <span style="margin-right:30rpx">姓名</span>
@@ -40,7 +39,8 @@
             </div>
 
           </div>
-          <div class="book-info">
+          <div class="book-info"
+               @click="goDetail('managerReview')">
             <div>
               <span style="margin-right:30rpx">预约单号:</span>
               <span>254855454</span>
@@ -68,8 +68,10 @@
           </div>
           <div class="book-confirm"
                v-if="content === '2'||content === '3'">
-            <button @click="cancelBook" v-if="content === '2'">确认接单</button>
-            <button style="color:#999;border-color:#999" v-else>已确认接单</button>
+            <button @click="cancelBook"
+                    v-if="content === '2'">确认接单</button>
+            <button style="color:#999;border-color:#999"
+                    v-else>已确认接单</button>
           </div>
           <div class="book-finish"
                v-if="content === '5'">
@@ -118,10 +120,12 @@ export default {
         this.content = '5'
       }
     },
-    goDetail(type){
-      wx.navigateTo({
-        url: '/pages/center/' + type + '/main',
-      });
+    goDetail(type) {
+      if (this.content==='3') {
+        wx.navigateTo({
+          url: '/pages/center/' + type + '/main',
+        })
+      }
     },
     cancelBook() {
       wxUtils.showModal({ content: '是否确认接单' }).then(res => {
@@ -173,8 +177,6 @@ export default {
       display: flex;
       flex-direction: column;
       width: 95%;
-      // height: 90%;
-      // overflow: scroll;
       .manager-book-inner {
         margin-bottom: 20rpx;
         background-color: #d7d7d7;

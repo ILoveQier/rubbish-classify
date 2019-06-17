@@ -40,7 +40,26 @@
               style="color:#0A9E96">已完成</span>
       </div>
     </div>
-    <div class="review-title">确认上门时间 ></div>
+    <div class="time-info">
+      <span>确认上门时间 ></span>
+      <picker mode="date"
+              :start="diagDate"
+              end="2099-01-01"
+              style="width:30%;margin-left:50rpx"
+              @change="confirmChange($event,'date')">
+        <span v-if="!confirmDate">请选择月份 ↓ </span>
+        <span v-else>{{confirmDate}} </span>
+      </picker>
+
+      <picker mode="time"
+              start="07:00"
+              end="21:59"
+              style="width:30%"
+              @change="confirmChange($event,'time')">
+        <span v-if="!confirmTime">请选择时间 ↓ </span>
+        <span v-else>{{confirmTime}} </span>
+      </picker>
+    </div>
     <div class="review-title"
          style="margin-top:50rpx">确认回收清单</div>
     <div class="recycle-info">
@@ -87,13 +106,22 @@ export default {
   data() {
     return {
       showMask: false,
-      recycleList: []
+      recycleList: [],
+      confirmDate: '',
+      confirmTime: ''
     }
   },
   components: {
     DrawerScreen
   },
   methods: {
+    confirmChange(e, type) {
+      if (type === 'date') {
+        this.confirmDate = e.mp.detail.value
+      } else {
+        this.confirmTime = e.mp.detail.value
+      }
+    },
     putRecycle(item) {
       this.showMask = false
       this.recycleList.push(item)
@@ -121,6 +149,16 @@ export default {
     line-height: 80rpx;
     text-align: center;
     background-color: #fff;
+  }
+  .time-info {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    margin: 30rpx 0;
+    height: 100rpx;
+    padding: 0 20rpx;
+    box-sizing: border-box;
+    width: 90%;
   }
   .review-info {
     margin-top: 10rpx;

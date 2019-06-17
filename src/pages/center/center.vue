@@ -81,7 +81,7 @@
           <span>我的资料</span>
         </div>
         <div class="record-flows">
-          <div class="flow-item" @click="goDetail('managerLoc')">
+          <div class="flow-item">
             <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/loc-manage.png">
             <span>居民地址</span>
           </div>
