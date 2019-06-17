@@ -10,11 +10,12 @@
     <div class="item">
       <span>登录密码</span>
       <input type="number"
-             maxlength="10"
+             maxlength="15"
              placeholder="请输入"
              placeholder-style='font-size:20rpx;'>
     </div>
-    <button class="login">登录</button>
+    <button class="login"
+            @click="login">登录</button>
   </div>
 </template>
 <script>
@@ -25,6 +26,18 @@ export default {
         phone: '',
         passward: ''
       }
+    }
+  },
+  methods: {
+    async login() {
+      if (!this.manager.phone || !this.manager.passward) {
+        this.$wxUtils.showModal({ content: '请填写完毕', showCancel: false })
+        return 
+      }
+      // let { data } = await this.$wxUtils.request(this.$api.SorterBind, this, {
+      //   phone: this.manager.phone,
+      //   password: this.manager.passward,
+      // })
     }
   },
 }
@@ -56,8 +69,8 @@ export default {
     }
   }
   .login {
-     width: 90%;
-     background-color: #0A9E96;
+    width: 90%;
+    background-color: #0a9e96;
   }
 }
 </style>

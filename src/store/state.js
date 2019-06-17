@@ -1,3 +1,3 @@
 export default {
-  role: 'user'
+  role: '普通用户'
 }

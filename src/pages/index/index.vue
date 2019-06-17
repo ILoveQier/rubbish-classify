@@ -26,7 +26,6 @@ export default {
     return {
       code: '',
       userInfo: {},
-      userId: '',
       temp: true
     }
   },
@@ -84,19 +83,26 @@ export default {
           },
           "userId": 25,
           "token": "v7ywu2zrcrgmlcrt2bwklw5zu4afqhm4",
-          "roleType": "普通用户"
+          "roleType": ""
         }
         //存储用户信息
         let userInfo = data.userInfo
         userInfo.userId = data.userId
-        userInfo.roleType = data.roleType
+        //分配角色
+        this.$store.state.role = data.roleType
         wx.setStorageSync('userInfo', data.userInfo)
         wx.setStorageSync('token', data.token)
         //将当前时间存到本地存储
         let createTime = new Date()
         wx.setStorageSync('createTime', createTime.getTime())
-        this.userId = data.userId
-        this.temp = false
+        // 如果没有角色信息 就让他注册或者登陆
+        if (!data.roleType) {
+          this.temp = false
+        } else {
+          wx.switchTab({
+            url: "/pages/home/main",
+          })
+        }
       } else {
         this.$wxUtils.showModal({ title: '登录失败', content: '请授权', showCancel: false })
       }

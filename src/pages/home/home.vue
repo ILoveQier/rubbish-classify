@@ -1,6 +1,6 @@
 <template>
   <div class="home-container">
-    <div v-if="role==='user'"
+    <div v-if="role==='普通用户'"
          class="home-item">
       <span>可回收垃圾0.8元/公斤兑换环保金
         厨余垃圾1/10公斤兑换环保金

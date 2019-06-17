@@ -9,6 +9,7 @@
       <div class="user-item">
         <span>身份证号</span>
         <input type="idcard"
+               maxlength="18"
                v-model="user.idNum">
       </div>
       <div class="user-item">
@@ -89,10 +90,10 @@
       </div>
       <div class="location-item">
         <span>详细地址</span>
-        <input type="text"
-               v-model="user.address"
-               placeholder-style='font-size:20rpx;text-align:center'
-               placeholder="必须详细到门牌号">
+        <textarea type="text"
+                  v-model="user.address"
+                  placeholder-style='font-size:20rpx;text-align:center'
+                  placeholder="必须详细到门牌号"></textarea>
       </div>
     </div>
     <div class="phone-info">
@@ -162,15 +163,19 @@ export default {
       }
     }
   },
-  onLoad() {
-    //TODO 初始化地址cityList
+  async onLoad() {
+    //TODO 初始化地址cityList 和 buildingList
+    // let { data } = await $wxUtils.request($api.GetChildrenArea, this)
     for (let index = 1; index < 31; index++) {
       this.addrObj.buildingList.push(index)
     }
-    // let { data } = await $wxUtils.request($api.GetChildrenArea, this)
   },
   methods: {
-    getQR() {
+    async getQR() {
+      if (!this.user.phone || this.user.phone.length < 11) {
+        let { data } = await $wxUtils.request($api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+        return
+      }
       this.isGetQR = true
       this.timeOpt = setInterval(() => {
         this.timer--
@@ -189,15 +194,28 @@ export default {
       let val = e.mp.detail.value
       this.addrObj[type + 'Name'] = this.addrObj[type + 'List'][val]
       //TODO 选择城市后查询areaList接口
-      // let { data } = await $wxUtils.request($api.GetChildrenArea, this, { 'cityName': this.addrObj.cityName })
+      // let { data } = await $wxUtils.request($api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
     },
     async finishRegister() {
+      if (this.user.idNum.length < 18) {
+        this.$wxUtils.showModal({ content: '您输入的身份证号码有误，须为18位数字', showCancel: false })
+        return
+      }
       if (this.user.phone.length < 11) {
         this.$wxUtils.showModal({ content: '您输入的手机号码有误，请重新输入，须为11位数字', showCancel: false })
         return
       }
+      for (const key in this.user) {
+        if (!this.user[key]) {
+          this.$wxUtils.showModal({ content: '请您补全信息', showCancel: false })
+          return
+        }
+      }
       // TODO 用户注册
       // let { data } = await this.$wxUtils.request(this.$api.UserRegister, this,{...this.user})
+      wx.switchTab({
+        url: "/pages/home/main",
+      })
     }
   },
 }
@@ -210,6 +228,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 25rpx;
   input {
     background-color: #fff;
     border: 2rpx solid #797979;
@@ -256,6 +275,13 @@ export default {
       input {
         flex: 1;
         margin-left: 60rpx;
+      }
+      textarea {
+        flex: 1;
+        margin-left: 50rpx;
+        height: 100rpx;
+        border: 2rpx solid #999;
+        background-color: #fff;
       }
       .picker {
         width: 300rpx;

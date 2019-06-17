@@ -4,7 +4,7 @@
       <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png">
       <div class="info-detail">
         <span>名字</span>
-        <div v-if="role==='user1'">
+        <div v-if="role==='普通用户'">
           <span>当前可提现环保金：216</span>
           <div>
             <span>文明积分：50</span>
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div v-if="role==='user1'"
+    <div v-if="role==='普通用户'"
          class="center-record">
       <div class="record-item">
         <div class="record-title">
