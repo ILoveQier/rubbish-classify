@@ -4,6 +4,7 @@
       <span style="margin-right:60rpx">手机号</span>
       <input type="number"
              maxlength="11"
+             v-model="phone"
              placeholder="请输入手机号"
              placeholder-style='font-size:20rpx;'>
     </div>
@@ -11,6 +12,7 @@
       <span>登录密码</span>
       <input type="number"
              maxlength="15"
+             v-model="password"
              placeholder="请输入"
              placeholder-style='font-size:20rpx;'>
     </div>
@@ -22,28 +24,30 @@
 export default {
   data() {
     return {
-      manager: {
-        phone: '',
-        passward: ''
-      }
+      phone: '',
+      password: ''
     }
   },
   methods: {
     async login() {
-      if (!this.manager.phone || !this.manager.passward) {
+      if (!this.phone || !this.password) {
         this.$wxUtils.showModal({ content: '请填写完毕', showCancel: false })
-        return 
+        return
       }
+      wx.switchTab({
+        url: "/pages/home/main",
+      })
       // let { data } = await this.$wxUtils.request(this.$api.SorterBind, this, {
-      //   phone: this.manager.phone,
-      //   password: this.manager.passward,
+      //   phone: this.phone,
+      //   password: this.password,
       // })
+      // this.$store.state.role = data.roleType
     }
   },
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .manager-container {
   width: 100vw;
   height: 100vh;

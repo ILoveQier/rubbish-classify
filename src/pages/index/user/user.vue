@@ -213,6 +213,8 @@ export default {
       }
       // TODO 用户注册
       // let { data } = await this.$wxUtils.request(this.$api.UserRegister, this,{...this.user})
+      // this.$store.state.role = data.roleType
+
       wx.switchTab({
         url: "/pages/home/main",
       })
