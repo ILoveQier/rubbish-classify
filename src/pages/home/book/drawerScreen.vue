@@ -252,7 +252,7 @@ export default {
       this.showWeight = false
       this.showSmallGood = false
       this.smallWeight = item
-      this.greenMoney = this.perMoney * this.smallWeight
+      this.greenMoney = (this.perMoney * this.smallWeight).toFixed(1)
     },
     countNum(type) {
       if (this.bigDetailId === -1) {
@@ -264,18 +264,18 @@ export default {
       } else {
         this.bigGoodNum = this.bigGoodNum === 1 ? 1 : this.bigGoodNum - 1
       }
-      this.greenMoney = this.perMoney * this.bigGoodNum
+      this.greenMoney = (this.perMoney * this.bigGoodNum).toFixed(1)
     },
     inputNum(e) {
       this.bigGoodNum = e.mp.detail.value
-      this.greenMoney = this.perMoney * this.bigGoodNum
+      this.greenMoney = (this.perMoney * this.bigGoodNum).toFixed(1)
     },
     confirmSmallDetailId(detail) {
       this.showSmallGood = false
       this.smallDetail = detail.detailType
       this.smallDetailId = detail.detailId
       this.perMoney = detail.greenBonuses
-      this.greenMoney = this.perMoney * this.smallWeight
+      this.greenMoney = (this.perMoney * this.smallWeight).toFixed(1)
     },
     confirmBigVal(item) {
       this.showBigGood = !this.showBigGood
@@ -320,19 +320,17 @@ export default {
         // 代表是小件
         item.type = 'small'
         item.detail = this.smallDetail
-        item.detailId = this.smallDetailId
-        item.weight = this.smallWeight
+        item.typeId = this.smallDetailId
+        item.quantity = this.smallWeight
       } else {
         // 大件
         item.type = 'big'
         item.detail = this.bigDetail
-        item.detailId = this.bigDetailId
-        item.num = this.bigGoodNum
+        item.typeId = this.bigDetailId
+        item.quantity = this.bigGoodNum
       }
-      item.greenMoney = this.greenMoney
-      console.log(item.detailId);
-
-      if (item.detailId === -1) {
+      item.bonus = this.greenMoney
+      if (item.typeId === -1) {
         this.$wxUtils.showModal({ content: '请选择要回收的物品', showCancel: false })
         return
       }
