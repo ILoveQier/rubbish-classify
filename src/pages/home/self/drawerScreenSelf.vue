@@ -359,10 +359,12 @@ export default {
       } else if (this.tab === 3) {
         // 厨余垃圾
         item.type = 'kitchen'
+        item.detail = '厨余垃圾'
         item.quantity = this.kitchenWeight
       } else if (this.tab === 4) {
         // 其他垃圾
         item.type = 'other'
+        item.detail = '其他垃圾'
         item.quantity = this.otherWeight
       }
       item.bonus = this.greenMoney
