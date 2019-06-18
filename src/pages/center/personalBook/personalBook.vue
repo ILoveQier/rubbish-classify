@@ -2,68 +2,70 @@
   <div class="personal-book-container">
     <div class="personal-book-content">
       <div class="personal-book-nav">
-        <div :class="{'selected':tab === 1}"
+        <div :class="{'selected':status === ''}"
              class="nav"
-             @click="getBookStatus(1)">全部</div>
-        <div :class="{'selected':tab === 2}"
+             @click="getBookStatus('')">全部</div>
+        <div :class="{'selected':status === '待接单'}"
              class="nav"
-             @click="getBookStatus(2)">待接单</div>
-        <div :class="{'selected':tab === 3}"
+             @click="getBookStatus('待接单')">待接单</div>
+        <div :class="{'selected':status === '已确认'}"
              class="nav"
-             @click="getBookStatus(3)">已接单</div>
-        <div :class="{'selected':tab === 4}"
+             @click="getBookStatus('已确认')">已确认</div>
+        <div :class="{'selected':status === '已取消'}"
              class="nav"
-             @click="getBookStatus(4)">已取消</div>
-        <div :class="{'selected':tab === 5}"
+             @click="getBookStatus('已取消')">已取消</div>
+        <div :class="{'selected':status === '已完成'}"
              class="nav"
-             @click="getBookStatus(5)">已完成</div>
+             @click="getBookStatus('已完成')">已完成</div>
       </div>
       <div class="personal-book-wrap">
         <div class=" personal-book-inner"
-             v-for="(item,i) in 25"
+             v-for="(book,i) in books"
              :key="i">
           <div class="book-info">
             <div>
               <span style="margin-right:30rpx">预约单号:</span>
-              <span>2767346328</span>
+              <span>{{book.appointmentNumber}}</span>
             </div>
-            <div>
+            <div style="margin:20rpx 0;">
               <span style="margin-right:30rpx">预约时间:</span>
-              <span>2019/05/30 07：00 - 11：00</span>
+              <span>{{book.appointmentTime}}</span>
             </div>
-            <div>
-              <span style="margin-right:30rpx">玻璃</span>
-              <span style="margin-right:30rpx">6KG</span>
+            <div v-for="estimateItem in book.estimateReservationList"
+                 :key="estimateItem">
+              <span style="margin-right:30rpx">{{estimateItem.typeName}}</span>
+              <span style="margin-right:30rpx">{{estimateItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">7</span>
+              <span style="color:#FF915A;">{{estimateItem.estimatePrices}}</span>
             </div>
             <div class="status">
-              <span v-if="content === '2'"
+              <span v-if="book.status === '待接单'"
                     style="color:#FF995E">待接单</span>
-              <span v-if="content === '3'"
-                    style="color:#FF995E">已接单</span>
-              <span v-if="content === '4'"
+              <span v-if="book.status === '已确认'"
+                    style="color:#FF995E">已确认</span>
+              <span v-if="book.status === '已取消'"
                     style="color:#999">已取消</span>
-              <span v-if="content === '5'"
+              <span v-if="book.status === '已完成'"
                     style="color:#0A9E96">已完成</span>
             </div>
           </div>
           <div class="book-cancel"
-               v-if="content === '2' || content === '3'">
+               v-if="book.status === '待接单' || book.status === '已确认'">
             <button @click="cancelBook">取消预约</button>
           </div>
           <div class="book-finish"
-               v-if="content === '5'">
+               v-if="book.status === '已完成'">
             <div>
               <span style="margin-right:30rpx">上门回收时间:</span>
-              <span>2019/05/30 07：00 - 11：00</span>
+              <span>{{book.actualTime}}</span>
             </div>
-            <div v-for="(item,index) in 3"
+            <div v-for="(actualItem,index) in book.actualReservationList"
+                 style="margin:10rpx 0;"
                  :key="index">
-              <span style="margin-right:30rpx">玻璃</span>
-              <span style="margin-right:30rpx">6KG</span>
+              <span style="margin-right:30rpx">{{actualItem.typeName}}</span>
+              <span style="margin-right:30rpx">{{actualItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">7</span>
+              <span style="color:#FF915A;">{{actualItem.estimatePrices}}</span>
             </div>
           </div>
         </div>
@@ -76,28 +78,128 @@ import wxUtils from '../../../utils/wxUtils';
 export default {
   data() {
     return {
-      tab: 1,
-      content: ''
+      status: '',
+      books: []
     }
+  },
+  onLoad() {
+    // TODO 获取用户订单
+    // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this，{status：this.status})
+    this.books = [{
+      "id": "123",
+      "cname": "sky",
+      "phone": "13611212722",
+      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+      "appointmentNumber": "2017080213564",
+      "appointmentTime": "2018-08-21 14:20:00",
+      "confirmTime": "2018-08-21 14:20:00",
+      "actualTime": "2019-08-21 14:20:00",
+      "status": "已确认",
+      "estimateReservationList": [{
+        "typeId": 1,
+        "typeName": "废铜",
+        "unitType": "重量",
+        "quantity": "15",
+        "estimatePrices": 200,
+        "estimateScore": 800
+      }],
+      "actualReservationList": [{
+        "typeId": 2,
+        "typeName": "废铁",
+        "unitType": "重量",
+        "quantity": "12.3",
+        "estimatePrices": 100,
+        "estimateScore": 300
+      }]
+    }, {
+      "id": "123",
+      "cname": "sky",
+      "phone": "13611212722",
+      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+      "appointmentNumber": "20170810213564",
+      "appointmentTime": "2019-12-21 14:20:00",
+      "confirmTime": "2018-08-21 14:20:00",
+      "actualTime": "2019-08-21 14:20:00",
+      "status": "已取消",
+      "estimateReservationList": [{
+        "typeId": 1,
+        "typeName": "烂铁",
+        "unitType": "重量",
+        "quantity": "25",
+        "estimatePrices": 100,
+        "estimateScore": 800
+      }],
+      "actualReservationList": [{
+        "typeId": 2,
+        "typeName": "宝石",
+        "unitType": "重量",
+        "quantity": "13.1",
+        "estimatePrices": 120,
+        "estimateScore": 300
+      }]
+    }, {
+      "id": "123",
+      "cname": "sky",
+      "phone": "13611212722",
+      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+      "appointmentNumber": "2017080213564",
+      "appointmentTime": "2018-11-21 14:20:00",
+      "confirmTime": "2018-08-21 14:20:00",
+      "actualTime": "2019-08-21 14:20:00",
+      "status": "待接单",
+      "estimateReservationList": [{
+        "typeId": 1,
+        "typeName": "玛瑙",
+        "unitType": "重量",
+        "quantity": "35",
+        "estimatePrices": 1100,
+        "estimateScore": 800
+      }],
+      "actualReservationList": [{
+        "typeId": 2,
+        "typeName": "废铁",
+        "unitType": "重量",
+        "quantity": "12.3",
+        "estimatePrices": 100,
+        "estimateScore": 300
+      }]
+    }, {
+      "id": "123",
+      "cname": "sky",
+      "phone": "13611212722",
+      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+      "appointmentNumber": "2017080213564",
+      "appointmentTime": "2018-11-21 14:20:00",
+      "confirmTime": "2018-08-21 14:20:00",
+      "actualTime": "2019-08-21 14:20:00",
+      "status": "已完成",
+      "estimateReservationList": [{
+        "typeId": 1,
+        "typeName": "玛瑙",
+        "unitType": "重量",
+        "quantity": "35",
+        "estimatePrices": 1100,
+        "estimateScore": 800
+      }],
+      "actualReservationList": [{
+        "typeId": 2,
+        "typeName": "废铁",
+        "unitType": "重量",
+        "quantity": "12.3",
+        "estimatePrices": 100,
+        "estimateScore": 300
+      }]
+    }]
   },
   methods: {
     getBookStatus(type) {
-      this.tab = type
-      if (type === 1) {
-        this.content = '1'
-      } else if (type === 2) {
-        this.content = '2'
-      } else if (type === 3) {
-        this.content = '3'
-      } else if (type === 4) {
-        this.content = '4'
-      } else if (type === 5) {
-        this.content = '5'
-      }
+      this.status = type
+      // TODO 根据不同状态 获取用户订单
+      // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this，{status：this.status})
     },
     cancelBook() {
       wxUtils.showModal({ content: '是否确认取消该预约？' }).then(res => {
-        
+
       })
     }
   },

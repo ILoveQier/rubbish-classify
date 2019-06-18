@@ -17,4 +17,5 @@ module.exports = {
   GetCurrentUserOrderCount: API_BASE_URL + 'recycle/getCurrentUserOrderCount', //获取预约单数量
   GetRecyclables: API_BASE_URL + 'recycle/getRecyclables', //获取可回收垃圾类型
   CreateReservationList: API_BASE_URL + 'recycle/createReservationList', //创建预约单
+  GetCurrentUserOrders: API_BASE_URL + 'recycle/getCurrentUserOrders', //获取预约单
 };
