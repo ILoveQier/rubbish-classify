@@ -68,7 +68,7 @@
           </div>
           <div class="book-confirm"
                v-if="content === '2'||content === '3'">
-            <button @click="cancelBook"
+            <button @click="confirmBook"
                     v-if="content === '2'">确认接单</button>
             <button style="color:#999;border-color:#999"
                     v-else>已确认接单</button>
@@ -93,7 +93,6 @@
   </div>
 </template>
 <script>
-import wxUtils from '../../../utils/wxUtils';
 export default {
   data() {
     return {
@@ -127,8 +126,8 @@ export default {
         })
       }
     },
-    cancelBook() {
-      wxUtils.showModal({ content: '是否确认接单' }).then(res => {
+    confirmBook() {
+      this.$wxUtils.showModal({ content: '是否确认接单' }).then(res => {
 
       })
     }

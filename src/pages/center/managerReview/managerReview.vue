@@ -4,7 +4,7 @@
     <div class="review-info"
          @click="goDetail('managerReview')"
          style="border-bottom:2rpx solid #fff;">
-      <div style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:10rpx;">
         <span style="margin-right:30rpx">姓名</span>
         <div>
           <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/phone.png"
@@ -12,20 +12,20 @@
           <span>18301469837</span>
         </div>
       </div>
-      <div>
+      <div style="margin:10rpx">
         <span>辽宁省东港市孤山镇</span>
         <span>XXXXXXXXXXXXXXXXXXXXXXXX</span>
       </div>
 
     </div>
     <div class="review-info">
-      <div>
+      <div style="margin:10rpx 0;">
         <span style="margin-right:30rpx">玻璃</span>
         <span style="margin-right:30rpx">6KG</span>
         <span style="margin-right:10rpx">预估环保金</span>
         <span style="color:#FF915A;">7</span>
       </div>
-      <div>
+      <div style="margin:10rpx 0;">
         <span style="margin-right:30rpx">预约时间:</span>
         <span>2019/05/30 07：00 - 11：00</span>
       </div>
@@ -60,8 +60,6 @@
         <span v-else>{{confirmTime}} </span>
       </picker>
     </div>
-    <div class="review-title"
-         style="margin-top:50rpx">确认回收清单</div>
     <div class="recycle-info">
       <div class="recycle-title"
            v-if="recycleList.length === 0">

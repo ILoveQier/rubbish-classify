@@ -4,7 +4,7 @@
       <img :src="roleObj.avatarUrl">
       <div class="info-detail">
         <span>{{roleObj.userName}}</span>
-        <div v-if="role==='普通用户'">
+        <div v-if="role==='普通用户1'">
           <span>当前可提现环保金：{{roleObj.envirTotal}}</span>
           <div>
             <span>文明积分：{{roleObj.civiTotal}}</span>
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div v-if="role==='普通用户'"
+    <div v-if="role==='普通用户1'"
          class="center-record">
       <div class="record-item">
         <div class="record-title">
