@@ -108,7 +108,9 @@ export default {
   computed: mapState([
     'role'
   ]),
-  async onLoad() {
+  async onShow() {
+    console.log(1);
+    
     if (this.role === '分拣员') {
       // TODO 分拣员的预约单数量
       // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrderCount, this)

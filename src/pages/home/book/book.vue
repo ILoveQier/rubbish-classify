@@ -4,11 +4,11 @@
       <div class="user-info">
         <div class="info-detail">
           <div class="info-nick">
-            <span>昵称</span>
-            <span>13552265254</span>
+            <span>{{roleObj.nickName}}</span>
+            <span>{{roleObj.phone}}</span>
           </div>
           <div class="info-loc">
-            <span style="width:300rpx">北京市西城区裕中西里xxxxxx</span>
+            <span style="width:500rpx">{{roleObj.addrVillage}}{{roleObj.addrBuilding}}{{roleObj.addressDetail}}</span>
             <span style="color:blue"
                   @click="modifyLoc">修改地址</span>
           </div>
@@ -130,18 +130,40 @@ export default {
       recycleList: [],
       bookDate: '',
       bookTime: '',
-      timeRange: []
+      timeRange: [],
+      roleObj: {}
     }
   },
   onLoad() {
-    // 初始化日期范围
+    // TODO 用户信息
+    // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this)
+    this.roleObj = {
+      "nickName": "sky",
+      "userName": "sky",
+      "realName": "小凡",
+      "gender": "0",
+      "phone": "13622103217",
+      "idNum": "110226199402123487",
+      "addrCity": "北京市",
+      "addrArea": "丰台区",
+      "addrStreet": "右安门街道",
+      "addrCommunity": "开阳里第一社区",
+      "addrVillage": "开阳里一区",
+      "addrBuilding": "1号楼",
+      "addressDetail": "2单元1203室",
+      "envirTotal": "200",
+      "rewardTotal": "100",
+      "civiTotal": "100",
+      "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132"
+    }
+    // 初始化时间段范围
     for (let index = 1; index < 24; index++) {
       let hour1 = ''
       let hour2 = ''
       hour1 = index < 10 ? '0' + index : index
-      hour2 = index < 9 ? '0' + (index+1) : (index+1)
-      let res = hour1+':00-'+hour2+':00'
-      this.timeRange.push(res)      
+      hour2 = index < 9 ? '0' + (index + 1) : (index + 1)
+      let res = hour1 + ':00-' + hour2 + ':00'
+      this.timeRange.push(res)
     }
   },
   methods: {
@@ -161,7 +183,7 @@ export default {
     },
     modifyLoc() {
       wx.navigateTo({
-        url: '/pages/home/book/modifyLoc/main',
+        url: '/pages/home/book/modifyLoc/main?roleObj=' + JSON.stringify(this.roleObj),
       })
     },
     confirm() {
@@ -198,7 +220,7 @@ export default {
         background: linear-gradient(to right, red, blue);
       }
       .info-detail {
-        padding: 10rpx 50rpx;
+        padding: 30rpx 50rpx;
         font-size: 30rpx;
         .info-nick,
         .info-loc {

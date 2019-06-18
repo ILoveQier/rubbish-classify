@@ -1,10 +1,10 @@
 {
   "pages": [
+    "pages/home/book/main",
     "pages/center/main",
     "pages/center/personalMoney/main",
     "pages/index/user/main",
     "pages/index/main",
-    "pages/home/book/main",
     "pages/center/managerReview/main",
     "pages/home/main",
     "pages/center/managerBook/main",
