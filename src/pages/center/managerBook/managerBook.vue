@@ -120,9 +120,10 @@ export default {
       }
     },
     goDetail(type) {
-      if (this.content==='3') {
+      if (this.content === '3') {
         wx.navigateTo({
-          url: '/pages/center/' + type + '/main',
+          // TODO 传id
+          url: '/pages/center/' + type + '/main?id=1',
         })
       }
     },

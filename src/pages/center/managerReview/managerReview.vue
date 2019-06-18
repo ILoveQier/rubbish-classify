@@ -5,29 +5,30 @@
          @click="goDetail('managerReview')"
          style="border-bottom:2rpx solid #fff;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin:10rpx;">
-        <span style="margin-right:30rpx">姓名</span>
+        <span style="margin-right:30rpx">{{order.cname}}</span>
         <div>
           <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/phone.png"
                style="width:50rpx;height:50rpx;vertical-align:middle">
-          <span>18301469837</span>
+          <span>{{order.phone}}</span>
         </div>
       </div>
       <div style="margin:10rpx">
-        <span>辽宁省东港市孤山镇</span>
-        <span>XXXXXXXXXXXXXXXXXXXXXXXX</span>
+        <span>{{order.address}}</span>
       </div>
 
     </div>
     <div class="review-info">
-      <div style="margin:10rpx 0;">
-        <span style="margin-right:30rpx">玻璃</span>
-        <span style="margin-right:30rpx">6KG</span>
+      <div style="margin:10rpx 0;"
+           v-for="(item,i) in order.estimateReservationList"
+           :key="i">
+        <span style="margin-right:30rpx">{{item.typeName}}</span>
+        <span style="margin-right:30rpx">{{item.quantity}}KG</span>
         <span style="margin-right:10rpx">预估环保金</span>
-        <span style="color:#FF915A;">7</span>
+        <span style="color:#FF915A;">{{item.estimatePrices}}</span>
       </div>
       <div style="margin:10rpx 0;">
         <span style="margin-right:30rpx">预约时间:</span>
-        <span>2019/05/30 07：00 - 11：00</span>
+        <span>{{order.appointmentTime}}</span>
       </div>
       <div class="status">
         <span v-if="content === '2'"
@@ -106,11 +107,44 @@ export default {
       showMask: false,
       recycleList: [],
       confirmDate: '',
-      confirmTime: ''
+      confirmTime: '',
+      order: {}
     }
   },
   components: {
     DrawerScreen
+  },
+  onLoad() {
+    let id = this.$getRoute().id
+    // TODO 根据id查询订单详情
+    // let { data } = await this.$wxUtils.request(this.$api.GetOrderDetail, this，{id})
+    this.order = {
+      "id": "123",
+      "cname": "sky",
+      "phone": "13611212722",
+      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+      "appointmentNumber": "2017080213564",
+      "appointmentTime": "2018-08-21 14:20:00",
+      "confirmTime": "2018-08-21 14:20:00",
+      "actualTime": "",
+      "status": "已确认",
+      "estimateReservationList": [{
+        "typeId": 1,
+        "typeName": "废铜",
+        "unitType": "重量",
+        "quantity": "15",
+        "estimatePrices": 200,
+        "estimateScore": 800
+      }],
+      "actualReservationList": [{
+        "typeId": 2,
+        "typeName": "废铁",
+        "unitType": "重量",
+        "quantity": "12.3",
+        "estimatePrices": 100,
+        "estimateScore": 300
+      }]
+    }
   },
   methods: {
     confirmChange(e, type) {

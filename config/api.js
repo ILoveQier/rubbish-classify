@@ -20,4 +20,5 @@ module.exports = {
   CreateReservationList: API_BASE_URL + 'recycle/createReservationList', //创建预约单
   GetCurrentUserOrders: API_BASE_URL + 'recycle/getCurrentUserOrders', //获取预约单
   CancelReservation: API_BASE_URL + 'recycle/cancelReservation', //取消预约单
+  GetOrderDetail: API_BASE_URL + 'recycle/getOrderDetail', //根据id获取订单详情
 };
