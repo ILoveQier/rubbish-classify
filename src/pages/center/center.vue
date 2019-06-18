@@ -26,7 +26,7 @@
         <div class="record-flows">
           <div class="flow-item"
                @click="goDetail('personalBook')">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/appointment.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/appointment.png">
             <span>我的预约</span>
           </div>
         </div>
@@ -37,12 +37,12 @@
         </div>
         <div class="record-flows">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/money-withdraw.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/money-withdraw.png">
             <span>环保金提现</span>
           </div>
           <div class="flow-item"
                @click="goDetail('personalMoney')">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/money-detail.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/money-detail.png">
             <span>环保金明细</span>
           </div>
         </div>
@@ -54,12 +54,12 @@
         <div class="record-flows">
           <div class="flow-item"
                @click="goDetail('personalInfo')">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/personal-info.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/personal-info.png">
             <span>个人信息</span>
           </div>
           <div class="flow-item"
                @click="goDetail('personalLoc')">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/loc-manage.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/loc-manage.png">
             <span>地址管理</span>
           </div>
         </div>
@@ -75,7 +75,7 @@
         <div class="record-flows">
           <div class="flow-item"
                @click="goDetail('managerBook')">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/order.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/order.png">
             <span>我的订单</span>
             <i>{{total}}</i>
           </div>
@@ -87,7 +87,7 @@
         </div>
         <div class="record-flows">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/loc-manage.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/loc-manage.png">
             <span>居民地址</span>
           </div>
         </div>

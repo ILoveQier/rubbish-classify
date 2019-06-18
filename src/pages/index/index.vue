@@ -2,7 +2,7 @@
   <div class="index-container">
     <div class="index-placehold"
          v-if="temp">
-      <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/before-entry.jpg">
+      <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/before-entry.jpg">
       <span>小程序需要获取您的用户名和昵称哦</span>
       <button class="begin"
               open-type="getUserInfo"
@@ -69,25 +69,23 @@ export default {
       this.userInfo = e.mp.detail.userInfo;
       if (this.userInfo) {
         // TODO 微信登陆
-        // let { data, res } = await this.$wxUtils.request(this.$api.AuthLoginByWeixin, this, {
-        //   userInfo: e.mp.detail,
-        //   code: this.code,
-        // })
-        let data = {
-          "userInfo": {
-            "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132",
-            "city": "",
-            "gender": 1,
-            "nickName": "SKY",
-            "province": ""
-          },
-          "userId": 25,
-          "token": "v7ywu2zrcrgmlcrt2bwklw5zu4afqhm4",
-          "roleType": ""
-        }
+        let { data } = await this.$wxUtils.request(this.$api.AuthLoginByWeixin, this, {
+          userInfo: e.mp.detail,
+          code: this.code,
+        })
+        // let data = {
+        //   "userInfo": {
+        //     "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132",
+        //     "city": "",
+        //     "gender": 1,
+        //     "nickName": "SKY",
+        //     "province": ""
+        //   },
+        //   "userId": 25,
+        //   "token": "v7ywu2zrcrgmlcrt2bwklw5zu4afqhm4",
+        //   "roleType": ""
+        // }
         //存储用户信息
-        let userInfo = data.userInfo
-        userInfo.userId = data.userId
         //分配角色
         this.$store.state.role = data.roleType
         wx.setStorageSync('userInfo', data.userInfo)

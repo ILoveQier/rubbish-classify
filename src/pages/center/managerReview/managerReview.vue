@@ -7,7 +7,7 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin:10rpx;">
         <span style="margin-right:30rpx">{{order.cname}}</span>
         <div>
-          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/phone.png"
+          <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/phone.png"
                style="width:50rpx;height:50rpx;vertical-align:middle">
           <span>{{order.phone}}</span>
         </div>

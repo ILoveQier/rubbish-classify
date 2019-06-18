@@ -1,7 +1,7 @@
 <template>
   <div class="userInfo-container">
     <div class="search">
-      <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/search.png">
+      <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/search.png">
       <div class="input-wrap">
         <input type="text">
       </div>

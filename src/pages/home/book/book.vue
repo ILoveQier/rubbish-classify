@@ -16,25 +16,25 @@
         <div class="line"></div>
         <!-- <div class="info-flows">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/finish-book.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/finish-book.png">
             <span>填写预约</span>
           </div>
-          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
+          <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/right-flow.png"
                class="right-flow">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/go-door.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/go-door.png">
             <span>管理员上门</span>
           </div>
-          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
+          <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/right-flow.png"
                class="right-flow">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/estimate.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/estimate.png">
             <span>马上评估</span>
           </div>
-          <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/right-flow.png"
+          <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/right-flow.png"
                class="right-flow">
           <div class="flow-item">
-            <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/score.png">
+            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/score.png">
             <span>积分到账</span>
           </div>
         </div> -->

@@ -28,7 +28,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between">
               <span style="margin-right:30rpx">姓名</span>
               <div>
-                <img src="cloud://rubbish-0kup1.7275-rubbish-0kup1/images/phone.png"
+                <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/phone.png"
                      style="width:50rpx;height:50rpx;vertical-align:middle">
                 <span>18301469837</span>
               </div>

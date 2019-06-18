@@ -18,7 +18,7 @@ Vue.prototype.$api = api
 //添加请求拦截器
 fly.interceptors.request.use((request) => {
   //给所有请求添加自定义header
-  request.headers["X-Jewelry-Token"] = wx.getStorageSync('token');
+  request.headers["X-TrashSort-Token"] = wx.getStorageSync('token');
   return request;
 })
 Vue.prototype.$getRoute = function () {

@@ -31,7 +31,6 @@
       <div class="location-item">
         <span>所在市</span>
         <picker @change="pickChange($event,'city')"
-                @click="pickClick('city')"
                 :range='addrObj.cityList'>
           <div class="picker">
             {{addrObj.cityName || '--请选择--'}}
@@ -42,7 +41,7 @@
            v-if="addrObj.cityName">
         <span>所在行政区</span>
         <picker @change="pickChange($event,'area')"
-                @click="pickClick('area')"
+                :disabled='addrObj.areaList.length == 0'
                 :range='addrObj.areaList'>
           <div class="picker">
             {{addrObj.areaName || '--请选择--'}}
@@ -54,7 +53,6 @@
            v-if="addrObj.areaName">
         <span>所在街道</span>
         <picker @change="pickChange($event,'street')"
-                @click="pickClick('street')"
                 :range='addrObj.streetList'>
           <div class="picker">
             {{addrObj.streetName || '--请选择--'}}
@@ -65,7 +63,6 @@
            v-if="addrObj.streetName">
         <span>所在社区</span>
         <picker @change="pickChange($event,'community')"
-                @click="pickClick('community')"
                 :range='addrObj.communityList'>
           <div class="picker">
             {{addrObj.communityName || '--请选择--'}}
@@ -76,7 +73,6 @@
            v-if="addrObj.communityName">
         <span>所在小区</span>
         <picker @change="pickChange($event,'small')"
-                @click="pickClick('small')"
                 :range='addrObj.smallList'>
           <div class="picker">
             {{addrObj.smallName || '--请选择--'}}
@@ -138,16 +134,17 @@ export default {
   data() {
     return {
       nameList: ['cityName', 'areaName', 'streetName', 'communityName', 'smallName'],
+      smalllist: [],
       isGetQR: false,
       timer: 30,
       timeOpt: null,
       addrObj: {
         // 请求列表
-        cityList: ['北京', '上海'],
-        areaList: ['西城区', '朝阳区', '海淀区', '昌平区'],
-        streetList: ['西城区', '朝阳区', '海淀区', '昌平区'],
-        communityList: ['西城区', '朝阳区', '海淀区', '昌平区'],
-        smallList: ['西城区', '朝阳区', '海淀区', '昌平区'],
+        cityList: ['北京市'],
+        areaList: [],
+        streetList: [],
+        communityList: [],
+        smallList: [],
         buildingList: [],
         // 选择的值
         cityName: '',
@@ -161,7 +158,7 @@ export default {
         realName: '',
         idNum: '',
         gender: 0,
-        addrId: '1',
+        addrId: -1,
         address: '',
         phone: '',
         phoneCode: '',
@@ -170,23 +167,30 @@ export default {
   },
   async onLoad() {
     //TODO 初始化地址cityList 和 buildingList
-    // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this)
     for (let index = 1; index < 31; index++) {
       this.addrObj.buildingList.push(index + '号楼')
     }
   },
   methods: {
-    pickClick(type) {
+    async pickClick(type) {
       let name = type + 'Name'
-      let list = type + 'List'
-      let index = this.nameList.indexOf(name)
+      let index = this.nameList.indexOf(name) + 1
+      let list = this.nameList[index].replace('Name', 'List')
       // 把之前值保留
-      let obj = {}
+      let obj = { cityName: '北京市' }
       for (let i2 = 0; i2 < index; i2++) {
         obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
       }
       // todo 根据之前值 查询当前的list数据
-      // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { ...obj })
+      let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, obj)
+      let res = data['areas']
+      this.addrObj[list] = []
+      for (let i = 0; i < res.length; i++) {
+        if (type === 'community') {
+          this.smalllist.push(res[i])
+        }
+        this.addrObj[list].push(res[i].name)
+      }
     },
     async getQR() {
       if (!this.user.phone || this.user.phone.length < 11) {
@@ -207,36 +211,64 @@ export default {
     radioChange: function (e) {
       this.user.gender = e.mp.detail.value
     },
-    pickChange: function (e, type) {
+    async pickChange(e, type) {
       let val = e.mp.detail.value
+      if (type === 'building') {
+        // todo building 是干嘛的 字段在哪里
+        this.addrObj.buildingName = this.addrObj.buildingList[val]
+        return
+      }
       let name = type + 'Name'
       let list = type + 'List'
-      // 如果变动了其中之一
-      if (this.addrObj[name] !== this.addrObj[list][val] && name !== 'smallName') {
-        let index = this.nameList.indexOf(name) + 1
-        // 把变动的之后值清空
-        for (let i = index; i < this.nameList.length; i++) {
-          this.addrObj[this.nameList[i]] = ''
-        }
-        this.addrObj[name] = this.addrObj[list][val]
-        // 把变动的之前包括自己值保留
-        let obj = {}
-        for (let i2 = 0; i2 < index; i2++) {
-          obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
-        }
-        // todo 发送查询地址 请求下一个list的数据
-        // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
+      this.addrObj[name] = this.addrObj[list][val]
+      if (type === 'small') {
+        this.smalllist.filter(e => {
+          if (e.name === this.addrObj.smallName) {
+            this.user.addrId = e.id
+            return
+          }
+        })
+        return
       }
-      if (this.addrObj[name] !== this.addrObj[list][val] && name === 'smallName') {
-        this.addrObj[name] = this.addrObj[list][val]
-        let obj = {}
-        for (let i2 = 0; i2 < this.nameList.length; i2++) {
-          obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
-        }
-        // todo 如果只改动了最后的小区 那么就发请求获得addrId
-        // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
+      let index = this.nameList.indexOf(name) + 1
+      // 把变动的之后值清空
+      for (let i = index; i < this.nameList.length; i++) {
+        this.addrObj[this.nameList[i]] = ''
       }
 
+      this.pickClick(type)
+
+      // let list = this.nameList[index].replace('Name', 'List')
+      // 如果变动了其中之一
+      // if (this.addrObj[name] !== this.addrObj[list][val] && name !== 'smallName') {
+      //   let index = this.nameList.indexOf(name) + 1
+      //   // 把变动的之后值清空
+      //   for (let i = index; i < this.nameList.length; i++) {
+      //     this.addrObj[this.nameList[i]] = ''
+      //   }
+      //   this.addrObj[name] = this.addrObj[list][val]
+      //   // 把变动的之前包括自己值保留
+      //   let obj = { cityName: '北京市' }
+      //   for (let i2 = 0; i2 < index; i2++) {
+      //     obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
+      //   }
+      //   // todo 发送查询地址 请求下一个list的数据
+      //   let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, obj)
+      //   let res = data['areas']
+      //   this.addrObj[list] = []
+      //   for (let i = 0; i < res.length; i++) {
+      //     this.addrObj[list].push(res[i].name)
+      //   }
+      // }
+      // if (this.addrObj[name] !== this.addrObj[list][val] && name === 'smallName') {
+      //   this.addrObj[name] = this.addrObj[list][val]
+      //   let obj = {}
+      //   for (let i2 = 0; i2 < this.nameList.length; i2++) {
+      //     obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
+      //   }
+      //   // todo 如果只改动了最后的小区 那么就发请求获得addrId
+      //   let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, obj)
+      // }
     },
     async finishRegister() {
       if (this.user.idNum.length < 18) {
