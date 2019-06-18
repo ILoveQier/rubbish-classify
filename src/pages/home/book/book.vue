@@ -79,10 +79,10 @@
           <div v-for="(item,i) in recycleList"
                :key="i"
                class="recycle-item">
-            <span style="width:40%">{{item.good}}({{item.type === 'small'?item.weight:item.num+'个'}})</span>
-            <span style="flex:1">7积分</span>
+            <span style="width:40%">{{item.detail}}({{item.type === 'small'?item.weight:item.num+'个'}})</span>
+            <span style="flex:1">{{item.greenMoney}}积分</span>
             <span class="minus"
-                  @click="deleteRecycle(i)"></span>
+                  @click="deleteRecycle(item,i)"></span>
           </div>
         </div>
         <div class="leave-message">
@@ -95,7 +95,7 @@
       <div class="left">
         <div>
           <span>预估环保金</span>
-          <span style="color:#FF915A;margin-left:20rpx">0</span>
+          <span style="color:#FF915A;margin-left:20rpx">{{preGreenMoney}}</span>
         </div>
         <span>（实际环保金以上门评估为准）</span>
       </div>
@@ -131,7 +131,8 @@ export default {
       bookDate: '',
       bookTime: '',
       timeRange: [],
-      roleObj: {}
+      roleObj: {},
+      preGreenMoney: 0
     }
   },
   onLoad() {
@@ -176,9 +177,11 @@ export default {
     },
     putRecycle(item) {
       this.showMask = false
+      this.preGreenMoney += item.greenMoney
       this.recycleList.push(item)
     },
-    deleteRecycle(i) {
+    deleteRecycle(item, i) {
+      this.preGreenMoney -= item.greenMoney
       this.recycleList.splice(i, 1)
     },
     modifyLoc() {

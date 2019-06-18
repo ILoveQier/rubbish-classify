@@ -13,10 +13,10 @@
         <div class="drawer-nav">
           <div :class="{'selected':tab === 1}"
                class="nav"
-               @click="tab=1">可回收小件</div>
+               @click="switchTab(1)">可回收小件</div>
           <div :class="{'selected':tab === 2}"
                class="nav"
-               @click="tab=2">可回收大件</div>
+               @click="switchTab(2)">可回收大件</div>
         </div>
         <div class="drawer-wrap">
           <div v-if="tab===1"
@@ -24,19 +24,19 @@
             <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
             <span>物品</span>
             <div class="goods-wrap">
-              <div v-for="(item,i) in smallGoods"
+              <div v-for="(smallGood,i) in smallGoods"
                    class="good-item"
                    :key="i">
                 <span class="goods"
-                      :class="{'small-selected':smallGoodId === i}">{{item}}</span>
+                      :class="{'small-selected':smallGoodId === smallGood.itemId}">{{smallGood.itemType}}</span>
                 <div class="item-details"
-                     @click="clickItem(item,i)">{{smallGoodId === i?smallItem:''}}</div>
+                     @click="clickSmallGood(smallGood)">{{smallGoodId === smallGood.itemId?smallDetail:''}}</div>
                 <div class="item-list"
-                     v-if="showItem && smallGoodId === i">
-                  <div v-for="item in itemList"
+                     v-if="showSmallGood && smallGoodId === smallGood.itemId">
+                  <div v-for="detail in smallGood.data"
                        class="val-item"
-                       @click="confirmVal(item)"
-                       :key='item'>{{item}}</div>
+                       @click="confirmSmallDetailId(detail)"
+                       :key='detail'>{{detail.detailType}}</div>
                 </div>
               </div>
             </div>
@@ -49,42 +49,42 @@
                      v-if="showWeight">
                   <div v-for="item in smallWeights"
                        class="val-item"
-                       @click="smallWeight = item;showWeight=false"
+                       @click="countWeight(item)"
                        :key='item'>{{item}}</div>
                 </div>
               </div>
               <span>KG</span>
             </div>
-
           </div>
           <div v-else-if="tab===2"
                class="drawer-inner">
             <span>物品</span>
             <div class="goods-wrap">
-              <div v-for="(item,i) in bigGoods"
+              <div v-for="(bigGood,i) in bigGoods"
                    class="good-item"
                    :key="i">
                 <span class="goods"
-                      :class="{'small-selected':bigGoodId === i}">{{item}}</span>
+                      :class="{'small-selected':bigGoodId === bigGood.itemId}">{{bigGood.itemType}}</span>
                 <div class="item-details"
-                     @click="clickBigItem(item,i)">{{bigGoodId === i?bigItem:''}}</div>
+                     @click="clickBigGood(bigGood)">{{bigGoodId === bigGood.itemId?bigDetail:''}}</div>
                 <div class="item-list"
-                     v-if="showBigItem && bigGoodId === i">
-                  <div v-for="item in itemList"
+                     v-if="showBigGood && bigGoodId === bigGood.itemId">
+                  <div v-for="detail in bigGood.data"
                        class="val-item"
-                       @click="confirmBigVal(item)"
-                       :key='item'>{{item}}</div>
+                       @click="confirmBigDetailId(detail)"
+                       :key='detail'>{{detail.detailType}}</div>
                 </div>
               </div>
             </div>
             <span>数量</span>
             <div class="count">
               <span class="minus"
-                    @click="bigGoodNum === 1?'1':bigGoodNum--"></span>
+                    @click="countNum('minus')"></span>
               <input type="number"
+                     @input="inputNum"
                      v-model="bigGoodNum">
               <span class="add"
-                    @click="bigGoodNum++"></span>
+                    @click="countNum('add')"></span>
               <span style="padding-left:20rpx;">个</span>
             </div>
           </div>
@@ -94,7 +94,7 @@
         <div class="left">
           <div>
             <span>预估环保金</span>
-            <span style="color:#FF915A;margin-left:20rpx">0</span>
+            <span style="color:#FF915A;margin-left:20rpx">{{greenMoney}}</span>
           </div>
         </div>
         <div class="right"
@@ -108,46 +108,210 @@ export default {
   props: ['showMask'],
   data() {
     return {
-      showItem: false,
+      showSmallGood: false,
       showWeight: false,
-      showBigItem: false,
+      showBigGood: false,
       tab: 1,
-      smallGoods: ['玻璃', '废纸', '金属'],
+      // 预计环保金
+      greenMoney: 0,
+      perMoney: 0,
+      // 可回收小件
+      smallGoods: [],
+      smallGoodId: -1,
+      smallDetail: '',
+      smallDetailId: -1,
       smallWeights: [1, 2, 3, 4, 5, 6],
-      smallGoodId: 0,
       smallWeight: 1,
-      bigGoods: ['废旧大家电', '洗衣机', '旧冰箱', '旧彩电'],
-      bigGoodId: 0,
+      // 可回收大件
+      bigGoods: [],
+      bigGoodId: -1,
+      bigDetailId: -1,
       bigGoodNum: 1,
-      itemList: ['金', '银', '铜'],
-      smallItem: '',
-      bigItem: ''
+      bigDetail: '',
     }
   },
   onUnload() {
     // todo 离开后清空
     this.tab = 1
   },
+  onLoad() {
+    // TODO 获取可回收垃圾类型
+    // let { data } = await this.$wxUtils.request(this.$api.GetRecyclables, this)
+    let data = [{
+      "standardId": 1,
+      "standardType": "可回收小件",
+      "describe": "小件商品回收",
+      "data": [{
+        "itemId": 1,
+        "itemType": "金属",
+        "unit": "重量",//重量或数量
+        "data": [{
+          "detailId": 1,//最终需要回传的垃圾类型id
+          "detailType": "废铜",
+          "greenBonuses": "1.2",//单位环保金
+          "greenPoints": "80"//单位奖励积分
+        },
+        {
+          "detailId": 2,
+          "detailType": "赤金",
+          "greenBonuses": "330",
+          "greenPoints": "9000"
+        }
+        ]
+      },
+      {
+        "itemId": 2,
+        "itemType": "宝特瓶",
+        "unit": "数量",
+        "data": [{
+          "detailId": 3,
+          "detailType": "色拉油瓶",
+          "greenBonuses": "0.5",
+          "greenPoints": "4"
+        },
+        {
+          "detailId": 4,
+          "detailType": "矿泉水瓶",
+          "greenBonuses": "0.2",
+          "greenPoints": "2"
+        }
+        ]
+      }
+      ]
+    },
+    {
+      "standardId": 2,
+      "standardType": "可回收大件",
+      "describe": "大件商品回收",
+      "data": [{
+        "itemId": 3,
+        "itemType": "冰箱",
+        "unit": "数量",
+        "data": [{
+          "detailId": 5,
+          "detailType": "冰箱A",
+          "greenBonuses": "200",
+          "greenPoints": "800"
+        }, {
+          "detailId": 6,
+          "detailType": "冰箱B",
+          "greenBonuses": "330",
+          "greenPoints": "9000"
+        }]
+      }, {
+        "itemId": 4,
+        "itemType": "彩电",
+        "unit": "数量",
+        "data": [{
+          "detailId": 5,
+          "detailType": "超级夜景",
+          "greenBonuses": "220",
+          "greenPoints": "800"
+        }, {
+          "detailId": 6,
+          "detailType": "松下彩电",
+          "greenBonuses": "230",
+          "greenPoints": "9000"
+        }]
+      }, {
+        "itemId": 5,
+        "itemType": "洗衣机",
+        "unit": "数量",
+        "data": [{
+          "detailId": 5,
+          "detailType": "垃圾洗衣机",
+          "greenBonuses": "100",
+          "greenPoints": "800"
+        }, {
+          "detailId": 6,
+          "detailType": "普通洗衣机",
+          "greenBonuses": "320",
+          "greenPoints": "9000"
+        }]
+      }]
+    }
+    ]
+    this.smallGoods = data[0].data
+    this.bigGoods = data[1].data
+  },
   methods: {
+    switchTab(tab) {
+      // 切换的时候清空
+      this.tab = tab
+      this.smallGoodId = -1
+      this.smallDetail = ''
+      this.smallDetailId = -1
+      this.smallWeight = 1
+      this.bigGoodId = -1
+      this.bigDetail = ''
+      this.bigDetailId = -1
+      this.bigGoodNum = 1
+      this.greenMoney = 0
+    },
+    countWeight(item) {
+      this.showWeight = false
+      this.showSmallGood = false
+      this.smallWeight = item
+      this.greenMoney = this.perMoney * this.smallWeight
+    },
+    countNum(type) {
+      if (this.bigDetailId === -1) {
+        this.$wxUtils.showModal({ content: '请先选择一个类目', showCancel: false })
+        return
+      }
+      if (type === 'add') {
+        this.bigGoodNum++
+      } else {
+        this.bigGoodNum = this.bigGoodNum === 1 ? 1 : this.bigGoodNum - 1
+      }
+      this.greenMoney = this.perMoney * this.bigGoodNum
+    },
+    inputNum(e) {
+      this.bigGoodNum = e.mp.detail.value
+      this.greenMoney = this.perMoney * this.bigGoodNum
+    },
+    confirmSmallDetailId(detail) {
+      this.showSmallGood = false
+      this.smallDetail = detail.detailType
+      this.smallDetailId = detail.detailId
+      this.perMoney = detail.greenBonuses
+      this.greenMoney = this.perMoney * this.smallWeight
+    },
     confirmBigVal(item) {
-      this.showBigItem = !this.showBigItem
-      this.bigItem = item
+      this.showBigGood = !this.showBigGood
+      this.bigDetail = item
     },
-    confirmVal(item) {
-      this.showItem = !this.showItem
-      this.smallItem = item
+    confirmBigDetailId(detail) {
+      this.showBigGood = false
+      this.bigDetail = detail.detailType
+      this.bigDetailId = detail.detailId
+      this.perMoney = detail.greenBonuses
+      this.greenMoney = this.perMoney * this.bigGoodNum
     },
-    clickBigItem(item, i) {
-      this.showBigItem = !this.showBigItem
-      this.bigGoodId = i
-      this.bigItem = ''
+    clickBigGood(bigGood) {
+      if (bigGood.itemId === this.bigGoodId) {
+        this.showBigGood = !this.showBigGood
+      } else {
+        this.showBigGood = true
+      }
+      this.bigGoodId = bigGood.itemId
+      this.bigDetail = ''
+      this.greenMoney = 0
+      this.bigDetailId = -1
     },
-    clickItem(item, i) {
-      this.showItem = !this.showItem
-      this.smallGoodId = i
-      this.smallItem = ''
+    clickSmallGood(smallGood) {
+      if (smallGood.itemId === this.smallGoodId) {
+        this.showSmallGood = !this.showSmallGood
+      } else {
+        this.showSmallGood = true
+      }
+      this.smallGoodId = smallGood.itemId
+      this.smallDetail = ''
+      this.greenMoney = 0
+      this.smallDetailId = -1
     },
     closeScreen() {
+      this.switchTab(1)
       this.$emit('close')
     },
     putRecycle() {
@@ -155,14 +319,24 @@ export default {
       if (this.tab === 1) {
         // 代表是小件
         item.type = 'small'
-        item.good = this.smallGoods[this.smallGoodId]
+        item.detail = this.smallDetail
+        item.detailId = this.smallDetailId
         item.weight = this.smallWeight
       } else {
         // 大件
         item.type = 'big'
-        item.good = this.bigGoods[this.bigGoodId]
+        item.detail = this.bigDetail
+        item.detailId = this.bigDetailId
         item.num = this.bigGoodNum
       }
+      item.greenMoney = this.greenMoney
+      console.log(item.detailId);
+
+      if (item.detailId === -1) {
+        this.$wxUtils.showModal({ content: '请选择要回收的物品', showCancel: false })
+        return
+      }
+      this.switchTab(1)
       this.$emit('putRecycle', item)
     }
   },
@@ -250,7 +424,7 @@ export default {
               margin-bottom: 20rpx;
               position: relative;
               .item-list {
-                width: 100rpx;
+                width: 150rpx;
                 max-height: 200rpx;
                 border: 2rpx solid blue;
                 background-color: #fff;
@@ -264,11 +438,12 @@ export default {
                   width: 100%;
                   height: 50rpx;
                   padding: 10rpx 0;
+                  line-height: 50rpx;
                   text-align: center;
                 }
               }
               .item-details {
-                width: 100rpx;
+                width: 150rpx;
                 height: 40rpx;
                 background-color: #fff;
                 border: 2rpx solid #eee;
