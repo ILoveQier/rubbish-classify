@@ -18,4 +18,5 @@ module.exports = {
   GetRecyclables: API_BASE_URL + 'recycle/getRecyclables', //获取可回收垃圾类型
   CreateReservationList: API_BASE_URL + 'recycle/createReservationList', //创建预约单
   GetCurrentUserOrders: API_BASE_URL + 'recycle/getCurrentUserOrders', //获取预约单
+  CancelReservation: API_BASE_URL + 'recycle/cancelReservation', //取消预约单
 };

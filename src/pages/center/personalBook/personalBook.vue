@@ -51,7 +51,7 @@
           </div>
           <div class="book-cancel"
                v-if="book.status === '待接单' || book.status === '已确认'">
-            <button @click="cancelBook">取消预约</button>
+            <button @click="cancelBook(book.id,book.status)">取消预约</button>
           </div>
           <div class="book-finish"
                v-if="book.status === '已完成'">
@@ -74,7 +74,6 @@
   </div>
 </template>
 <script>
-import wxUtils from '../../../utils/wxUtils';
 export default {
   data() {
     return {
@@ -86,7 +85,7 @@ export default {
     // TODO 获取用户订单
     // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this，{status：this.status})
     this.books = [{
-      "id": "123",
+      "id": "53",
       "cname": "sky",
       "phone": "13611212722",
       "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
@@ -112,7 +111,7 @@ export default {
         "estimateScore": 300
       }]
     }, {
-      "id": "123",
+      "id": "13",
       "cname": "sky",
       "phone": "13611212722",
       "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
@@ -138,7 +137,7 @@ export default {
         "estimateScore": 300
       }]
     }, {
-      "id": "123",
+      "id": "33",
       "cname": "sky",
       "phone": "13611212722",
       "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
@@ -197,9 +196,13 @@ export default {
       // TODO 根据不同状态 获取用户订单
       // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this，{status：this.status})
     },
-    cancelBook() {
-      wxUtils.showModal({ content: '是否确认取消该预约？' }).then(res => {
-
+    cancelBook(id, status) {
+      this.$wxUtils.showModal({ content: '是否确认取消该预约？' }).then(res => {
+        if (res === 'confirm') {
+          // TODO 用户取消订单
+          // let { data } = await this.$wxUtils.request(this.$api.CancelReservation, this，{id})
+          this.getBookStatus(status)
+        }
       })
     }
   },
