@@ -120,7 +120,7 @@ export default {
       for (let i2 = 0; i2 < index; i2++) {
         obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
       }
-      // todo 根据之前值 查询当前的list
+      // todo 根据之前值 查询当前的list数据
       // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { ...obj })
     },
     pickChange: function (e, type) {
@@ -135,12 +135,12 @@ export default {
           this.addrObj[this.nameList[i]] = ''
         }
         this.addrObj[name] = this.addrObj[list][val]
-        // 把变动的之前值保留
+        // 把变动的之前包括自己值保留
         let obj = {}
         for (let i2 = 0; i2 < index; i2++) {
           obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
         }
-        // todo 发送查询地址请求
+        // todo 发送查询地址 请求下一个list的数据
         // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
       }
       if (this.addrObj[name] !== this.addrObj[list][val] && name === 'smallName') {

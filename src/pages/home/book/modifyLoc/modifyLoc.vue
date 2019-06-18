@@ -4,6 +4,7 @@
       <div class="location-item">
         <span>所在市</span>
         <picker @change="pickChange($event,'city')"
+                @click="pickClick('city')"
                 :range='addrObj.cityList'>
           <div class="picker">
             {{addrObj.cityName || '--请选择--'}}
@@ -14,6 +15,7 @@
            v-if="addrObj.cityName">
         <span>所在行政区</span>
         <picker @change="pickChange($event,'area')"
+                @click="pickClick('area')"
                 :range='addrObj.areaList'>
           <div class="picker">
             {{addrObj.areaName || '--请选择--'}}
@@ -25,6 +27,7 @@
            v-if="addrObj.areaName">
         <span>所在街道</span>
         <picker @change="pickChange($event,'street')"
+                @click="pickClick('street')"
                 :range='addrObj.streetList'>
           <div class="picker">
             {{addrObj.streetName || '--请选择--'}}
@@ -35,6 +38,7 @@
            v-if="addrObj.streetName">
         <span>所在社区</span>
         <picker @change="pickChange($event,'community')"
+                @click="pickClick('community')"
                 :range='addrObj.communityList'>
           <div class="picker">
             {{addrObj.communityName || '--请选择--'}}
@@ -45,6 +49,7 @@
            v-if="addrObj.communityName">
         <span>所在小区</span>
         <picker @change="pickChange($event,'small')"
+                @click="pickClick('small')"
                 :range='addrObj.smallList'>
           <div class="picker">
             {{addrObj.smallName || '--请选择--'}}
@@ -104,10 +109,20 @@ export default {
     for (let index = 1; index < 31; index++) {
       this.addrObj.buildingList.push(index + '号楼')
     }
-    //TODO 从citylist开始查询赋值
-    // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
   },
   methods: {
+    pickClick(type) {
+      let name = type + 'Name'
+      let list = type + 'List'
+      let index = this.nameList.indexOf(name)
+      // 把之前值保留
+      let obj = {}
+      for (let i2 = 0; i2 < index; i2++) {
+        obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
+      }
+      // todo 根据之前值 查询当前的list数据
+      // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { ...obj })
+    },
     pickChange: function (e, type) {
       let val = e.mp.detail.value
       let name = type + 'Name'
@@ -120,12 +135,12 @@ export default {
           this.addrObj[this.nameList[i]] = ''
         }
         this.addrObj[name] = this.addrObj[list][val]
-        // 把变动的之前值保留
+        // 把变动的之前包括自己值保留
         let obj = {}
         for (let i2 = 0; i2 < index; i2++) {
           obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
         }
-        // todo 发送查询地址请求
+        // todo 发送查询地址 请求下一个list的数据
         // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
       }
       if (this.addrObj[name] !== this.addrObj[list][val] && name === 'smallName') {
