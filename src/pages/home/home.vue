@@ -6,7 +6,7 @@
         厨余垃圾1/10公斤兑换环保金
         废旧大家电以实际上门看实物为准</span>
       <div @click="goBook">预约上门</div>
-      <div>环保金提现</div>
+      <div @click="withDraw">环保金提现</div>
     </div>
     <div v-else
          class="home-item">
@@ -27,6 +27,13 @@ export default {
     'role'
   ]),
   methods: {
+    withDraw() {
+      this.$wxUtils.showModal({
+        title: '温馨提示',
+        content: '单次提现金额至少1元并不超过200元  1<提现金额≤200',
+        confirmText: '立即提现'
+      })
+    },
     goBook() {
       wx.navigateTo({
         url: '/pages/home/book/main',

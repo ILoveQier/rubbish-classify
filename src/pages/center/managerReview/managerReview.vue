@@ -86,14 +86,15 @@
         <div v-for="(item,i) in recycleList"
              :key="i"
              class="recycle-item">
-          <span style="width:40%">{{item.good}}({{item.type === 'small'?item.weight:item.num+'个'}})</span>
-          <span style="flex:1">7积分</span>
+          <span style="width:40%">{{item.detail}}({{item.quantity}})</span>
+          <span style="flex:1">{{item.bonus}}积分</span>
           <span class="minus"
-                @click="deleteRecycle(i)"></span>
+                @click="deleteRecycle(item,i)"></span>
         </div>
       </div>
     </div>
-    <div class="review-title">确认回收</div>
+    <div class="review-title"
+         @click="confirmRecycle">确认回收</div>
     <DrawerScreen :showMask='showMask'
                   @putRecycle='putRecycle'
                   @close='showMask=false'></DrawerScreen>
@@ -108,6 +109,7 @@ export default {
       recycleList: [],
       confirmDate: '',
       confirmTime: '',
+      preGreenMoney: 0,
       order: {}
     }
   },
@@ -117,7 +119,7 @@ export default {
   onLoad() {
     let id = this.$getRoute().id
     // TODO 根据id查询订单详情
-    // let { data } = await this.$wxUtils.request(this.$api.GetOrderDetail, this，{id})
+    // let { data } = await this.$wxUtils.request(this.$api.GetOrderDetail, this,{id})
     this.order = {
       "id": "123",
       "cname": "sky",
@@ -147,6 +149,21 @@ export default {
     }
   },
   methods: {
+    confirmRecycle() {
+      if (!this.confirmDate || !this.confirmTime) {
+        this.$wxUtils.showModal({ content: '请选择上门时间', showCancel: false })
+        return
+      }
+      if (this.recycleList.length === 0) {
+        this.$wxUtils.showModal({ content: '请选择回收物品', showCancel: false })
+        return
+      }
+      let id = this.order.appointmentNumber
+      let confirmTime = this.confirmDate + " " + this.confirmTime
+      // TODO 更新上门时间
+      // let { data } = await this.$wxUtils.request(this.$api.UpdateSorterConfirmTime, this,{id,confirmTime})
+
+    },
     confirmChange(e, type) {
       if (type === 'date') {
         this.confirmDate = e.mp.detail.value
@@ -156,9 +173,17 @@ export default {
     },
     putRecycle(item) {
       this.showMask = false
-      this.recycleList.push(item)
+      this.preGreenMoney = (parseFloat(this.preGreenMoney) + parseFloat(item.bonus)).toFixed(1)
+      let obj = {
+        "detail": item.detail,
+        "typeId": item.typeId,
+        "quantity": item.quantity,
+        "bonus": item.bonus
+      }
+      this.recycleList.push(obj)
     },
-    deleteRecycle(i) {
+    deleteRecycle(item, i) {
+      this.preGreenMoney -= item.bonus
       this.recycleList.splice(i, 1)
     },
   },
