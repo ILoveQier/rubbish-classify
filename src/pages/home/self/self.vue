@@ -1,10 +1,12 @@
 <template>
   <div class="self-container">
-    <div class="self-item"  @click="chooseOther('otherLoc')">
+    <div class="self-item"
+         @click="chooseOther('otherLoc')">
       <span>右安门街道服务站</span>
       <span style="font-size:25rpx">选择其他垃圾投放点 ></span>
     </div>
-    <div class="self-item" @click="chooseOther('userInfo')">
+    <div class="self-item"
+         @click="chooseOther('userInfo')">
       <span>选择居民信息</span>
       <span> ></span>
     </div>
@@ -27,22 +29,20 @@
            v-if="recycleList.length === 0">
         <button @click="showMask=true">立即添加</button>
       </div>
-      <div v-else
+       <div v-else
            class="recycle-lists">
         <div v-for="(item,i) in recycleList"
              :key="i"
              class="recycle-item">
-          <span style="width:40%">
-            {{item.good || (item.type==='kitchen'?'厨余':'其他')}}
-            ({{item.type === 'small'?item.weight+'KG':(item.type === 'big'?item.num+'个':(item.type === 'kitchen'?item.kitchenWeight+'KG':item.otherWeight+'KG'))}})
-          </span>
-          <span style="flex:1">7积分</span>
+          <span style="width:40%">{{item.detail}}({{item.quantity}})</span>
+          <span style="flex:1">{{item.bonus}}积分</span>
           <span class="minus"
-                @click="deleteRecycle(i)"></span>
+                @click="deleteRecycle(item,i)"></span>
         </div>
       </div>
     </div>
-    <button class="confirm" :class="{'confirmReady':recycleList.length > 0}">确认投放</button>
+    <button class="confirm"
+            :class="{'confirmReady':recycleList.length > 0}">确认投放</button>
     <DrawerScreenSelf :showMask='showMask'
                       @putRecycle='putRecycle'
                       @close='showMask=false'></DrawerScreenSelf>
@@ -59,20 +59,29 @@ export default {
   data() {
     return {
       showMask: false,
+      preGreenMoney: 0,
       recycleList: []
     }
   },
   methods: {
     putRecycle(item) {
       this.showMask = false
-      this.recycleList.push(item)
+      this.preGreenMoney = (parseFloat(this.preGreenMoney) + parseFloat(item.bonus)).toFixed(1)
+      let obj = {
+        "detail": item.detail,
+        "typeId": item.typeId,
+        "quantity": item.quantity,
+        "bonus": item.bonus
+      }
+      this.recycleList.push(obj)
     },
-    deleteRecycle(i) {
+    deleteRecycle(item, i) {
+      this.preGreenMoney -= item.bonus
       this.recycleList.splice(i, 1)
     },
     chooseOther(type) {
       wx.navigateTo({
-        url: '/pages/home/self/'+type+'/main',
+        url: '/pages/home/self/' + type + '/main',
       })
     }
   },

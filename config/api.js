@@ -3,7 +3,7 @@ const root = '/api/';
 
 // const API_BASE_URL = 'http://fly2you.cn' + root;
 //const API_BASE_URL = 'http://localhost:8081' + root;
-const API_BASE_URL = 'https://test2.idatage.com' + root;
+const API_BASE_URL = 'https://testtra.treeyee.com' + root;
 
 module.exports = {
   AuthLoginByWeixin: API_BASE_URL + 'auth/login_by_weixin', //微信登录
