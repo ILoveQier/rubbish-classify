@@ -20,7 +20,7 @@ module.exports = {
   GetRecyclables: API_BASE_URL + 'recycle/getRecyclables', //获取可回收垃圾类型
   CreateReservationList: API_BASE_URL + 'recycle/createReservationList', //创建预约单
   GetCurrentUserOrders: API_BASE_URL + 'recycle/getCurrentUserOrders', //获取预约单
-  CancelReservation: API_BASE_URL + 'recycle/cancelReservation', //取消预约单
+  CancelAppointment: API_BASE_URL + 'recycle/cancelAppointment', //取消预约单
   GetOrderDetail: API_BASE_URL + 'recycle/getOrderDetail', //根据id获取订单详情
   AuditChecklist: API_BASE_URL + 'recycle/auditChecklist', //分拣员审核预约订单
   UpdateSorterConfirmTime: API_BASE_URL + 'recycle/updateSorterConfirmTime', //分拣员确认上门时间

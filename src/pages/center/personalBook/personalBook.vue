@@ -25,18 +25,19 @@
           <div class="book-info">
             <div>
               <span style="margin-right:30rpx">预约单号:</span>
-              <span>{{book.appointmentNumber}}</span>
+              <span>{{book.id}}</span>
             </div>
             <div style="margin:20rpx 0;">
               <span style="margin-right:30rpx">预约时间:</span>
               <span>{{book.appointmentTime}}</span>
             </div>
-            <div v-for="estimateItem in book.estimateReservationList"
-                 :key="estimateItem">
-              <span style="margin-right:30rpx">{{estimateItem.typeName}}</span>
-              <span style="margin-right:30rpx">{{estimateItem.quantity}}KG</span>
+            <div v-for="appointItem in book.appointmentList"
+                 style="margin:10rpx 0"
+                 :key="appointItem">
+              <span style="margin-right:30rpx">{{appointItem.typeName}}</span>
+              <span style="margin-right:30rpx">{{appointItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">{{estimateItem.estimatePrices}}</span>
+              <span style="color:#FF915A;">{{appointItem.estimatePrices}}</span>
             </div>
             <div class="status">
               <span v-if="book.status === '待接单'"
@@ -81,7 +82,8 @@ export default {
       books: []
     }
   },
-  async onLoad() {
+  async onShow() {
+    this.status = ''
     // TODO 获取用户订单
     let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status })
     this.books = data.data
@@ -95,19 +97,28 @@ export default {
     }
   },
   methods: {
-    getBookStatus(type) {
+    async getBookStatus(type) {
       this.status = type
       // TODO 根据不同状态 获取用户订单
-      // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this，{status：this.status})
+      let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status })
+      this.books = data.data
     },
-    cancelBook(id, status) {
-      this.$wxUtils.showModal({ content: '是否确认取消该预约？' }).then(res => {
-        if (res === 'confirm') {
-          // TODO 用户取消订单
-          // let { data } = await this.$wxUtils.request(this.$api.CancelReservation, this，{id})
-          this.getBookStatus(status)
-        }
-      })
+    async cancelBook(id, status) {
+      this.$wxUtils.showModal({ content: '是否确认取消该预约？' })
+        .then(async res => {
+          if (res === 'confirm') {
+            // TODO 用户取消订单
+            let { res } = await this.$wxUtils.request(this.$api.CancelAppointment, this, { id })
+            if (res.errno === 0) {
+              wx.showToast({
+                title: '取消成功',
+                duration: 1500,
+                mask: true,
+              });
+            }
+            this.getBookStatus('')
+          }
+        })
     }
   },
 }
