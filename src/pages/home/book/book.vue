@@ -8,36 +8,12 @@
             <span>{{roleObj.phone}}</span>
           </div>
           <div class="info-loc">
-            <span style="width:500rpx">{{roleObj.addrVillage}}{{roleObj.addrBuilding}}{{roleObj.addressDetail}}</span>
+            <span style="width:500rpx">{{roleObj.addrVillage}}{{roleObj.addrBuilding}}{{roleObj.addrDetail}}</span>
             <span style="color:blue"
                   @click="modifyLoc">修改地址</span>
           </div>
         </div>
         <div class="line"></div>
-        <!-- <div class="info-flows">
-          <div class="flow-item">
-            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/finish-book.png">
-            <span>填写预约</span>
-          </div>
-          <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/right-flow.png"
-               class="right-flow">
-          <div class="flow-item">
-            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/go-door.png">
-            <span>管理员上门</span>
-          </div>
-          <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/right-flow.png"
-               class="right-flow">
-          <div class="flow-item">
-            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/estimate.png">
-            <span>马上评估</span>
-          </div>
-          <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/right-flow.png"
-               class="right-flow">
-          <div class="flow-item">
-            <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/score.png">
-            <span>积分到账</span>
-          </div>
-        </div> -->
       </div>
       <div class="time-info">
         <span style="margin-right:50rpx">预约时间</span>
@@ -48,11 +24,19 @@
           <span v-if="!bookDate">请选择月份 ↓ </span>
           <span v-else>{{bookDate}} </span>
         </picker>
-        <picker :range="timeRange"
+        <picker mode="time"
+                start="07:00"
+                end="21:59"
+                style="width:30%"
                 @change="bookChange($event,'time')">
           <span v-if="!bookTime">请选择时间 ↓ </span>
           <span v-else>{{bookTime}} </span>
         </picker>
+        <!-- <picker :range="timeRange"
+                @change="bookChange($event,'time')">
+          <span v-if="!bookTime">请选择时间 ↓ </span>
+          <span v-else>{{bookTime}} </span>
+        </picker> -->
       </div>
       <div class="recycle-info">
         <div class="recycle-title"
@@ -62,9 +46,9 @@
         <div class="recycle-title"
              v-else>
           <span style="width:40%">回收清单</span>
-          <span style="flex:1">预估奖励</span>
+          <span>预估奖励</span>
           <div class="continue-add">
-            <span>继续添加</span>
+            <!-- <span>继续添加</span> -->
             <span class="add"
                   @click="showMask=true"></span>
           </div>
@@ -79,8 +63,8 @@
           <div v-for="(item,i) in recycleList"
                :key="i"
                class="recycle-item">
-            <span style="width:40%">{{item.detail}}({{item.quantity}})</span>
-            <span style="flex:1">{{item.bonus}}积分</span>
+            <span style="width:40%;overflow:hidden;text-overflow:ellipsis;white-space: nowrap;">{{item.detail}}({{item.quantity}})</span>
+            <span>{{item.bonus}}积分</span>
             <span class="minus"
                   @click="deleteRecycle(item,i)"></span>
           </div>
@@ -100,7 +84,7 @@
         <span>（实际环保金以上门评估为准）</span>
       </div>
       <div class="right"
-           @click="confirm">确认预约</div>
+           @click="confirmBook">确认预约</div>
     </div>
     <DrawerScreen :showMask='showMask'
                   @putRecycle='putRecycle'
@@ -110,11 +94,14 @@
 </template>
 <script>
 import DrawerScreen from './drawerScreen'
+import { mapState } from "vuex"
+
 export default {
   components: {
     DrawerScreen
   },
   computed: {
+    ...mapState(["role"]),
     diagDate: () => {
       let year = new Date().getFullYear()
       let month = new Date().getMonth() + 1
@@ -134,44 +121,27 @@ export default {
       preGreenMoney: 0
     }
   },
-  onLoad() {
+  async onShow() {
     // TODO 用户信息
-    // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this)
-    this.roleObj = {
-      "nickName": "sky",
-      "userName": "sky",
-      "realName": "小凡",
-      "gender": "0",
-      "phone": "13622103217",
-      "idNum": "110226199402123487",
-      "addrCity": "北京市",
-      "addrArea": "丰台区",
-      "addrStreet": "右安门街道",
-      "addrCommunity": "开阳里第一社区",
-      "addrVillage": "开阳里一区",
-      "addrBuilding": "1号楼",
-      "addressDetail": "2单元1203室",
-      "envirTotal": "200",
-      "rewardTotal": "100",
-      "civiTotal": "100",
-      "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132"
-    }
+    let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this, { roleType: this.role })
+    this.roleObj = data.userInfo
     // 初始化时间段范围
-    for (let index = 1; index < 24; index++) {
-      let hour1 = ''
-      let hour2 = ''
-      hour1 = index < 10 ? '0' + index : index
-      hour2 = index < 9 ? '0' + (index + 1) : (index + 1)
-      let res = hour1 + ':00-' + hour2 + ':00'
-      this.timeRange.push(res)
-    }
+    // for (let index = 1; index < 24; index++) {
+    //   let hour1 = ''
+    //   let hour2 = ''
+    //   hour1 = index < 10 ? '0' + index : index
+    //   hour2 = index < 9 ? '0' + (index + 1) : (index + 1)
+    //   let res = hour1 + ':00-' + hour2 + ':00'
+    //   this.timeRange.push(res)
+    // }
   },
   methods: {
     bookChange(e, type) {
       if (type === 'date') {
         this.bookDate = e.mp.detail.value
       } else {
-        this.bookTime = this.timeRange[e.mp.detail.value]
+        // this.bookTime = this.timeRange[e.mp.detail.value]
+        this.bookTime = e.mp.detail.value
       }
     },
     putRecycle(item) {
@@ -194,22 +164,28 @@ export default {
         url: '/pages/home/book/modifyLoc/main?roleObj=' + JSON.stringify(this.roleObj),
       })
     },
-    confirm() {
+    async confirmBook() {
       if (!this.bookDate || !this.bookTime) {
         this.$wxUtils.showModal({ content: '请选择预约日期', showCancel: false })
         return
       }
-      let appointmentTime = this.bookDate + ' ' + this.bookTime
+      let appointmentTime = this.bookDate + ' ' + this.bookTime +':00'
       if (!this.preGreenMoney) {
         this.$wxUtils.showModal({ content: '请选择要回收的物品', showCancel: false })
         return
       }
-
       this.$wxUtils.showModal({ title: '温馨提示', content: '厨余垃圾不予上门回收服务可回收垃圾满5kg才可预约上门回收（除废旧大家电）回收物体不明确时请参考分类', confirmText: '立即预约' })
-        .then(res => {
+        .then(async res => {
           if (res === 'confirm') {
             // TODO 创建预约单
-            // let { data } = await this.$wxUtils.request(this.$api.CreateReservationList, this,{reservationList:this.recycleList,appointmentTime})
+            let reservationList = []
+            for (let index = 0; index < this.recycleList.length; index++) {
+              let obj = {}
+              obj.typeId = this.recycleList[index].typeId
+              obj.quantity = this.recycleList[index].quantity
+              reservationList.push(obj)
+            }
+            let { data } = await this.$wxUtils.request(this.$api.CreateReservationList, this, { reservationList, appointmentTime })
             this.$wxUtils.showModal({ title: '预约成功', content: '管理员会尽快上门回收！', confirmText: '查看预约' })
           }
         })
