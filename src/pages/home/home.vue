@@ -11,7 +11,7 @@
     <div v-else
          class="home-item">
       <span></span>
-      <div @click="goSelf">自助投放</div>
+      <div @click="goSelf">自主投放</div>
     </div>
   </div>
 </template>
@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .home-container {
   width: 100vw;
   height: 100vh;

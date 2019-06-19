@@ -31,17 +31,31 @@ export default {
   methods: {
     async login() {
       if (!this.phone || !this.password) {
+        if (this.phone.length < 11) {
+          this.$wxUtils.showModal({ content: '请填写正确手机号', showCancel: false })
+          return
+        }
         this.$wxUtils.showModal({ content: '请填写完毕', showCancel: false })
         return
       }
-      wx.switchTab({
-        url: "/pages/home/main",
+
+      let { data, res } = await this.$wxUtils.request(this.$api.SorterBind, this, {
+        phone: this.phone,
+        password: this.password,
       })
-      // let { data } = await this.$wxUtils.request(this.$api.SorterBind, this, {
-      //   phone: this.phone,
-      //   password: this.password,
-      // })
-      // this.$store.state.role = data.roleType
+      if (res.errno === 0) {
+        wx.showToast({
+          title: '登录成功',
+          duration: 1500,
+          mask: true,
+        })
+        this.$store.state.role = data.roleType
+        wx.switchTab({
+          url: "/pages/home/main",
+        })
+      } else {
+        this.$wxUtils.showModal({ title: '登录失败', content: '请重新登录', showCancel: false })
+      }
     }
   },
 }

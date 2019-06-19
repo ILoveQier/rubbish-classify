@@ -72,10 +72,10 @@
       <div class="location-item"
            v-if="addrObj.communityName">
         <span>所在小区</span>
-        <picker @change="pickChange($event,'small')"
-                :range='addrObj.smallList'>
+        <picker @change="pickChange($event,'village')"
+                :range='addrObj.villageList'>
           <div class="picker">
-            {{addrObj.smallName || '--请选择--'}}
+            {{addrObj.villageName || '--请选择--'}}
           </div>
         </picker>
       </div>
@@ -84,14 +84,14 @@
         <picker @change="pickChange($event,'building')"
                 :range='addrObj.buildingList'>
           <div class="picker">
-            {{addrObj.buildingName || '--请选择--'}}
+            {{user.buildingNum || '--请选择--'}}
           </div>
         </picker>
       </div>
       <div class="location-item">
         <span>详细地址</span>
         <textarea type="text"
-                  v-model="user.address"
+                  v-model="user.addressDetail"
                   placeholder-style='font-size:20rpx;text-align:center'
                   placeholder="必须详细到门牌号"></textarea>
       </div>
@@ -133,8 +133,8 @@
 export default {
   data() {
     return {
-      nameList: ['cityName', 'areaName', 'streetName', 'communityName', 'smallName'],
-      smalllist: [],
+      nameList: ['cityName', 'areaName', 'streetName', 'communityName', 'villageName'],
+      villagelist: [],
       isGetQR: false,
       timer: 30,
       timeOpt: null,
@@ -144,22 +144,22 @@ export default {
         areaList: [],
         streetList: [],
         communityList: [],
-        smallList: [],
+        villageList: [],
         buildingList: [],
         // 选择的值
         cityName: '',
         areaName: '',
         streetName: '',
         communityName: '',
-        smallName: '',
-        buildingName: ''
+        villageName: '',
       },
       user: {
         realName: '',
         idNum: '',
         gender: 0,
-        addrId: -1,
-        address: '',
+        addrId: '',
+        buildingNum: '',
+        addressDetail: '',
         phone: '',
         phoneCode: '',
       }
@@ -187,16 +187,17 @@ export default {
       this.addrObj[list] = []
       for (let i = 0; i < res.length; i++) {
         if (type === 'community') {
-          this.smalllist.push(res[i])
+          this.villagelist.push(res[i])
         }
         this.addrObj[list].push(res[i].name)
       }
     },
     async getQR() {
       if (!this.user.phone || this.user.phone.length < 11) {
-        let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+        this.$wxUtils.showModal({ content: '请填写正确手机号', showCancel: false })
         return
       }
+
       this.isGetQR = true
       this.timeOpt = setInterval(() => {
         this.timer--
@@ -207,6 +208,11 @@ export default {
           return
         }
       }, 1000);
+      let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+      wx.showToast({
+        title: '短信验证码已发送',
+        duration: 1500,
+      });
     },
     radioChange: function (e) {
       this.user.gender = e.mp.detail.value
@@ -215,19 +221,21 @@ export default {
       let val = e.mp.detail.value
       if (type === 'building') {
         // todo building 是干嘛的 字段在哪里
-        this.addrObj.buildingName = this.addrObj.buildingList[val]
+        this.user.buildingNum = this.addrObj.buildingList[val]
         return
       }
       let name = type + 'Name'
       let list = type + 'List'
       this.addrObj[name] = this.addrObj[list][val]
-      if (type === 'small') {
-        this.smalllist.filter(e => {
-          if (e.name === this.addrObj.smallName) {
-            this.user.addrId = e.id
-            return
-          }
-        })
+      if (type === 'village') {
+        let obj = { cityName: '北京市' }
+        // 获取所有值
+        for (let i2 = 0; i2 < this.nameList.length; i2++) {
+          obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
+        }
+        // todo 查询最终小区
+        let { data } = await this.$wxUtils.request(this.$api.GetIdByDetailArea, this, obj)
+        this.user.addrId = data.id
         return
       }
       let index = this.nameList.indexOf(name) + 1
@@ -235,12 +243,11 @@ export default {
       for (let i = index; i < this.nameList.length; i++) {
         this.addrObj[this.nameList[i]] = ''
       }
-
       this.pickClick(type)
 
       // let list = this.nameList[index].replace('Name', 'List')
       // 如果变动了其中之一
-      // if (this.addrObj[name] !== this.addrObj[list][val] && name !== 'smallName') {
+      // if (this.addrObj[name] !== this.addrObj[list][val] && name !== 'villageName') {
       //   let index = this.nameList.indexOf(name) + 1
       //   // 把变动的之后值清空
       //   for (let i = index; i < this.nameList.length; i++) {
@@ -260,7 +267,7 @@ export default {
       //     this.addrObj[list].push(res[i].name)
       //   }
       // }
-      // if (this.addrObj[name] !== this.addrObj[list][val] && name === 'smallName') {
+      // if (this.addrObj[name] !== this.addrObj[list][val] && name === 'villageName') {
       //   this.addrObj[name] = this.addrObj[list][val]
       //   let obj = {}
       //   for (let i2 = 0; i2 < this.nameList.length; i2++) {
@@ -280,18 +287,25 @@ export default {
         return
       }
       for (const key in this.user) {
-        if (!this.user[key] && this.user[key] !== 0) {
+        if (!this.user[key] && this.user[key] !== 0 && key !== 'buildingNum') {
           this.$wxUtils.showModal({ content: '请您补全信息', showCancel: false })
           return
         }
       }
       // TODO 用户注册
-      // let { data } = await this.$wxUtils.request(this.$api.UserRegister, this,{...this.user})
-      // this.$store.state.role = data.roleType
-
-      wx.switchTab({
-        url: "/pages/home/main",
-      })
+      let { data, res } = await this.$wxUtils.request(this.$api.UserRegister, this, this.user)
+      if (res.errno === 0) {
+        wx.showToast({
+          title: '注册成功',
+          duration: 1500,
+        });
+        this.$store.state.role = data.roleType
+        wx.switchTab({
+          url: "/pages/home/main",
+        })
+      } else {
+        this.$wxUtils.showModal({ content: '注册失败', showCancel: false })
+      }
     }
   },
 }
