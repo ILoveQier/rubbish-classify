@@ -169,7 +169,7 @@ export default {
         this.$wxUtils.showModal({ content: '请选择预约日期', showCancel: false })
         return
       }
-      let appointmentTime = this.bookDate + ' ' + this.bookTime +':00'
+      let appointmentTime = this.bookDate + ' ' + this.bookTime + ':00'
       if (!this.preGreenMoney) {
         this.$wxUtils.showModal({ content: '请选择要回收的物品', showCancel: false })
         return
@@ -187,6 +187,17 @@ export default {
             }
             let { data } = await this.$wxUtils.request(this.$api.CreateReservationList, this, { reservationList, appointmentTime })
             this.$wxUtils.showModal({ title: '预约成功', content: '管理员会尽快上门回收！', confirmText: '查看预约' })
+              .then(res => {
+                if (res === 'confirm') {
+                  wx.navigateTo({
+                    url: '/pages/center/personalBook/main?type=look',
+                  })
+                } else {
+                  wx.switchTab({
+                    url: '/pages/home/main',
+                  })
+                }
+              })
           }
         })
     }
