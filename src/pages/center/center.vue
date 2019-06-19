@@ -127,7 +127,7 @@ export default {
   },
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .center-container {
   width: 100vw;
   height: 100vh;

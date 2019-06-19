@@ -62,10 +62,11 @@ export default {
       isGetQR: false,
       timer: 30,
       timeOpt: null,
+      roleObj: {},
       user: {
         realName: '',
         idNum: '',
-        gender: 0,
+        gender: '0',
         phone: '',
         phoneCode: '',
       }
@@ -73,6 +74,7 @@ export default {
   },
   onLoad() {
     let roleObj = JSON.parse(this.$getRoute().roleObj)
+    this.roleObj = roleObj
     this.user = {
       realName: roleObj.realName,
       idNum: roleObj.idNum,
@@ -83,7 +85,7 @@ export default {
   methods: {
     async getQR() {
       if (!this.user.phone || this.user.phone.length < 11) {
-        let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+        this.$wxUtils.showModal({ content: '请填写正确手机号', showCancel: false })
         return
       }
       this.isGetQR = true
@@ -96,11 +98,16 @@ export default {
           return
         }
       }, 1000);
+      let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+      wx.showToast({
+        title: '短信验证码已发送',
+        duration: 1500,
+      });
     },
     radioChange: function (e) {
       this.user.gender = e.mp.detail.value
     },
-    save() {
+    async save() {
       if (this.user.idNum.length < 18) {
         this.$wxUtils.showModal({ content: '您输入的身份证号码有误，须为18位数字', showCancel: false })
         return
@@ -109,14 +116,34 @@ export default {
         this.$wxUtils.showModal({ content: '您输入的手机号码有误，须为11位数字', showCancel: false })
         return
       }
+      if (this.roleObj.phone !== this.user.phone && !this.user.phoneCode) {
+        this.$wxUtils.showModal({ content: '更新手机号需要验证码', showCancel: false })
+        return
+      }
       for (const key in this.user) {
-        if (!this.user[key] && this.user[key] !== 0) {
+        if (!this.user[key] && key !== 'phoneCode') {
           this.$wxUtils.showModal({ content: '请您补全信息', showCancel: false })
           return
         }
       }
+      let final = JSON.parse(JSON.stringify(this.user))
+      if (this.roleObj.phone === this.user.phone) {
+        final.phone = ''
+      }
+
       // TODO 更新用户信息
-      // let { data } = await this.$wxUtils.request(this.$api.UpdateNormal, this,{...this.user})
+      let { res } = await this.$wxUtils.request(this.$api.UpdateNormal, this, final)
+      if (res.errno === 0) {
+        wx.showToast({
+          title: '更新成功',
+          duration: 1000,
+          mask: true
+        })
+        await this.$wxUtils.sleep(1000)
+        wx.navigateBack({
+          delta: 1
+        })
+      }
     }
   },
 }

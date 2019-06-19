@@ -192,31 +192,6 @@ export default {
         this.addrObj[list].push(res[i].name)
       }
     },
-    async getQR() {
-      if (!this.user.phone || this.user.phone.length < 11) {
-        this.$wxUtils.showModal({ content: '请填写正确手机号', showCancel: false })
-        return
-      }
-
-      this.isGetQR = true
-      this.timeOpt = setInterval(() => {
-        this.timer--
-        if (this.timer === 0) {
-          this.isGetQR = false
-          this.timer = 30
-          clearInterval(this.timeOpt)
-          return
-        }
-      }, 1000);
-      let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
-      wx.showToast({
-        title: '短信验证码已发送',
-        duration: 1500,
-      });
-    },
-    radioChange: function (e) {
-      this.user.gender = e.mp.detail.value
-    },
     async pickChange(e, type) {
       let val = e.mp.detail.value
       if (type === 'building') {
@@ -276,6 +251,30 @@ export default {
       //   // todo 如果只改动了最后的小区 那么就发请求获得addrId
       //   let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, obj)
       // }
+    },
+    async getQR() {
+      if (!this.user.phone || this.user.phone.length < 11) {
+        this.$wxUtils.showModal({ content: '请填写正确手机号', showCancel: false })
+        return
+      }
+      this.isGetQR = true
+      this.timeOpt = setInterval(() => {
+        this.timer--
+        if (this.timer === 0) {
+          this.isGetQR = false
+          this.timer = 30
+          clearInterval(this.timeOpt)
+          return
+        }
+      }, 1000);
+      let { data } = await this.$wxUtils.request(this.$api.GetCheckCodeByPhone, this, { phone: this.user.phone })
+      wx.showToast({
+        title: '短信验证码已发送',
+        duration: 1500,
+      });
+    },
+    radioChange: function (e) {
+      this.user.gender = e.mp.detail.value
     },
     async finishRegister() {
       if (this.user.idNum.length < 18) {

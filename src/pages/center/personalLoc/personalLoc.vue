@@ -4,7 +4,6 @@
       <div class="location-item">
         <span>所在市</span>
         <picker @change="pickChange($event,'city')"
-                @click="pickClick('city')"
                 :range='addrObj.cityList'>
           <div class="picker">
             {{addrObj.cityName || '--请选择--'}}
@@ -15,7 +14,6 @@
            v-if="addrObj.cityName">
         <span>所在行政区</span>
         <picker @change="pickChange($event,'area')"
-                @click="pickClick('area')"
                 :range='addrObj.areaList'>
           <div class="picker">
             {{addrObj.areaName || '--请选择--'}}
@@ -27,7 +25,6 @@
            v-if="addrObj.areaName">
         <span>所在街道</span>
         <picker @change="pickChange($event,'street')"
-                @click="pickClick('street')"
                 :range='addrObj.streetList'>
           <div class="picker">
             {{addrObj.streetName || '--请选择--'}}
@@ -38,7 +35,6 @@
            v-if="addrObj.streetName">
         <span>所在社区</span>
         <picker @change="pickChange($event,'community')"
-                @click="pickClick('community')"
                 :range='addrObj.communityList'>
           <div class="picker">
             {{addrObj.communityName || '--请选择--'}}
@@ -48,11 +44,10 @@
       <div class="location-item"
            v-if="addrObj.communityName">
         <span>所在小区</span>
-        <picker @change="pickChange($event,'small')"
-                @click="pickClick('small')"
-                :range='addrObj.smallList'>
+        <picker @change="pickChange($event,'village')"
+                :range='addrObj.villageList'>
           <div class="picker">
-            {{addrObj.smallName || '--请选择--'}}
+            {{addrObj.villageName || '--请选择--'}}
           </div>
         </picker>
       </div>
@@ -80,30 +75,30 @@
 export default {
   data() {
     return {
-      nameList: ['cityName', 'areaName', 'streetName', 'communityName', 'smallName'],
+      nameList: ['cityName', 'areaName', 'streetName', 'communityName', 'villageName'],
       addrObj: {},
       loc: {
         addrId: '',
-        address: '',
+        addressDetail: '',
       }
     }
   },
   onLoad() {
     let roleObj = JSON.parse(this.$getRoute().roleObj)
-    this.loc.address = roleObj.addressDetail
+    this.loc.addressDetail = roleObj.addressDetail
     this.addrObj = {
       // 请求列表
-      cityList: ['北京', '上海'],
-      areaList: ['西城区', '朝阳区', '海淀区', '昌平区'],
-      streetList: ['西城区', '朝阳区', '海淀区', '昌平区'],
-      communityList: ['西城区', '朝阳区', '海淀区', '昌平区'],
-      smallList: ['西城区', '朝阳区', '海淀区', '昌平区'],
+      cityList: ['北京市'],
+      areaList: [],
+      streetList: [],
+      communityList: [],
+      villageList: [],
       buildingList: [],
       cityName: roleObj.addrCity,
       areaName: roleObj.addrArea,
       streetName: roleObj.addrStreet,
       communityName: roleObj.addrCommunity,
-      smallName: roleObj.addrVillage,
+      villageName: roleObj.addrVillage,
       buildingName: roleObj.addrBuilding
     }
     for (let index = 1; index < 31; index++) {
@@ -111,55 +106,60 @@ export default {
     }
   },
   methods: {
-    pickClick(type) {
+    async pickClick(type) {
       let name = type + 'Name'
-      let list = type + 'List'
-      let index = this.nameList.indexOf(name)
+      let index = this.nameList.indexOf(name) + 1
+      let list = this.nameList[index].replace('Name', 'List')
       // 把之前值保留
-      let obj = {}
+      let obj = { cityName: '北京市' }
       for (let i2 = 0; i2 < index; i2++) {
         obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
       }
       // todo 根据之前值 查询当前的list数据
-      // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { ...obj })
+      let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, obj)
+      let res = data['areas']
+      this.addrObj[list] = []
+      for (let i = 0; i < res.length; i++) {
+        if (type === 'community') {
+          this.villagelist.push(res[i])
+        }
+        this.addrObj[list].push(res[i].name)
+      }
     },
-    pickChange: function (e, type) {
+    async pickChange(e, type) {
       let val = e.mp.detail.value
+      if (type === 'building') {
+        // todo building 是干嘛的 字段在哪里
+        this.user.buildingNum = this.addrObj.buildingList[val]
+        return
+      }
       let name = type + 'Name'
       let list = type + 'List'
-      // 如果变动了其中之一
-      if (this.addrObj[name] !== this.addrObj[list][val] && name !== 'smallName') {
-        let index = this.nameList.indexOf(name) + 1
-        // 把变动的之后值清空
-        for (let i = index; i < this.nameList.length; i++) {
-          this.addrObj[this.nameList[i]] = ''
-        }
-        this.addrObj[name] = this.addrObj[list][val]
-        // 把变动的之前包括自己值保留
-        let obj = {}
-        for (let i2 = 0; i2 < index; i2++) {
-          obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
-        }
-        // todo 发送查询地址 请求下一个list的数据
-        // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
-      }
-      if (this.addrObj[name] !== this.addrObj[list][val] && name === 'smallName') {
-        this.addrObj[name] = this.addrObj[list][val]
-        let obj = {}
+      this.addrObj[name] = this.addrObj[list][val]
+      if (type === 'village') {
+        let obj = { cityName: '北京市' }
+        // 获取所有值
         for (let i2 = 0; i2 < this.nameList.length; i2++) {
           obj[this.nameList[i2]] = this.addrObj[this.nameList[i2]]
         }
-        // todo 如果只改动了最后的小区 那么就发请求获得addrId
-        // let { data } = await this.$wxUtils.request(this.$api.GetChildrenArea, this, { cityName: this.addrObj.cityName })
+        // todo 查询最终小区
+        let { data } = await this.$wxUtils.request(this.$api.GetIdByDetailArea, this, obj)
+        this.user.addrId = data.id
+        return
       }
-
+      let index = this.nameList.indexOf(name) + 1
+      // 把变动的之后值清空
+      for (let i = index; i < this.nameList.length; i++) {
+        this.addrObj[this.nameList[i]] = ''
+      }
+      this.pickClick(type)
     },
     saveLoc() {
       if (!this.loc.addrId) {
         this.$wxUtils.showModal({ content: '请将地址填写完整', showCancel: false })
         return
       }
-      if (!this.loc.address) {
+      if (!this.loc.addressDetail) {
         this.$wxUtils.showModal({ content: '请填写详细地址', showCancel: false })
         return
       }
