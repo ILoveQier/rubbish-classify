@@ -81,114 +81,115 @@ export default {
       books: []
     }
   },
-  onLoad() {
+  async onLoad() {
     // TODO 获取用户订单
-    // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this，{status：this.status})
-    this.books = [{
-      "id": "53",
-      "cname": "sky",
-      "phone": "13611212722",
-      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
-      "appointmentNumber": "2017080213564",
-      "appointmentTime": "2018-08-21 14:20:00",
-      "confirmTime": "2018-08-21 14:20:00",
-      "actualTime": "2019-08-21 14:20:00",
-      "status": "已确认",
-      "estimateReservationList": [{
-        "typeId": 1,
-        "typeName": "废铜",
-        "unitType": "重量",
-        "quantity": "15",
-        "estimatePrices": 200,
-        "estimateScore": 800
-      }],
-      "actualReservationList": [{
-        "typeId": 2,
-        "typeName": "废铁",
-        "unitType": "重量",
-        "quantity": "12.3",
-        "estimatePrices": 100,
-        "estimateScore": 300
-      }]
-    }, {
-      "id": "13",
-      "cname": "sky",
-      "phone": "13611212722",
-      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
-      "appointmentNumber": "20170810213564",
-      "appointmentTime": "2019-12-21 14:20:00",
-      "confirmTime": "2018-08-21 14:20:00",
-      "actualTime": "2019-08-21 14:20:00",
-      "status": "已取消",
-      "estimateReservationList": [{
-        "typeId": 1,
-        "typeName": "烂铁",
-        "unitType": "重量",
-        "quantity": "25",
-        "estimatePrices": 100,
-        "estimateScore": 800
-      }],
-      "actualReservationList": [{
-        "typeId": 2,
-        "typeName": "宝石",
-        "unitType": "重量",
-        "quantity": "13.1",
-        "estimatePrices": 120,
-        "estimateScore": 300
-      }]
-    }, {
-      "id": "33",
-      "cname": "sky",
-      "phone": "13611212722",
-      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
-      "appointmentNumber": "2017080213564",
-      "appointmentTime": "2018-11-21 14:20:00",
-      "confirmTime": "2018-08-21 14:20:00",
-      "actualTime": "2019-08-21 14:20:00",
-      "status": "待接单",
-      "estimateReservationList": [{
-        "typeId": 1,
-        "typeName": "玛瑙",
-        "unitType": "重量",
-        "quantity": "35",
-        "estimatePrices": 1100,
-        "estimateScore": 800
-      }],
-      "actualReservationList": [{
-        "typeId": 2,
-        "typeName": "废铁",
-        "unitType": "重量",
-        "quantity": "12.3",
-        "estimatePrices": 100,
-        "estimateScore": 300
-      }]
-    }, {
-      "id": "123",
-      "cname": "sky",
-      "phone": "13611212722",
-      "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
-      "appointmentNumber": "2017080213564",
-      "appointmentTime": "2018-11-21 14:20:00",
-      "confirmTime": "2018-08-21 14:20:00",
-      "actualTime": "2019-08-21 14:20:00",
-      "status": "已完成",
-      "estimateReservationList": [{
-        "typeId": 1,
-        "typeName": "玛瑙",
-        "unitType": "重量",
-        "quantity": "35",
-        "estimatePrices": 1100,
-        "estimateScore": 800
-      }],
-      "actualReservationList": [{
-        "typeId": 2,
-        "typeName": "废铁",
-        "unitType": "重量",
-        "quantity": "12.3",
-        "estimatePrices": 100,
-        "estimateScore": 300
-      }]
-    }]
+    let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status })
+    this.books = data.data
+    // this.books = [{
+    //   "id": "53",
+    //   "cname": "sky",
+    //   "phone": "13611212722",
+    //   "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+    //   "appointmentNumber": "2017080213564",
+    //   "appointmentTime": "2018-08-21 14:20:00",
+    //   "confirmTime": "2018-08-21 14:20:00",
+    //   "actualTime": "2019-08-21 14:20:00",
+    //   "status": "已确认",
+    //   "estimateReservationList": [{
+    //     "typeId": 1,
+    //     "typeName": "废铜",
+    //     "unitType": "重量",
+    //     "quantity": "15",
+    //     "estimatePrices": 200,
+    //     "estimateScore": 800
+    //   }],
+    //   "actualReservationList": [{
+    //     "typeId": 2,
+    //     "typeName": "废铁",
+    //     "unitType": "重量",
+    //     "quantity": "12.3",
+    //     "estimatePrices": 100,
+    //     "estimateScore": 300
+    //   }]
+    // }, {
+    //   "id": "13",
+    //   "cname": "sky",
+    //   "phone": "13611212722",
+    //   "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+    //   "appointmentNumber": "20170810213564",
+    //   "appointmentTime": "2019-12-21 14:20:00",
+    //   "confirmTime": "2018-08-21 14:20:00",
+    //   "actualTime": "2019-08-21 14:20:00",
+    //   "status": "已取消",
+    //   "estimateReservationList": [{
+    //     "typeId": 1,
+    //     "typeName": "烂铁",
+    //     "unitType": "重量",
+    //     "quantity": "25",
+    //     "estimatePrices": 100,
+    //     "estimateScore": 800
+    //   }],
+    //   "actualReservationList": [{
+    //     "typeId": 2,
+    //     "typeName": "宝石",
+    //     "unitType": "重量",
+    //     "quantity": "13.1",
+    //     "estimatePrices": 120,
+    //     "estimateScore": 300
+    //   }]
+    // }, {
+    //   "id": "33",
+    //   "cname": "sky",
+    //   "phone": "13611212722",
+    //   "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+    //   "appointmentNumber": "2017080213564",
+    //   "appointmentTime": "2018-11-21 14:20:00",
+    //   "confirmTime": "2018-08-21 14:20:00",
+    //   "actualTime": "2019-08-21 14:20:00",
+    //   "status": "待接单",
+    //   "estimateReservationList": [{
+    //     "typeId": 1,
+    //     "typeName": "玛瑙",
+    //     "unitType": "重量",
+    //     "quantity": "35",
+    //     "estimatePrices": 1100,
+    //     "estimateScore": 800
+    //   }],
+    //   "actualReservationList": [{
+    //     "typeId": 2,
+    //     "typeName": "废铁",
+    //     "unitType": "重量",
+    //     "quantity": "12.3",
+    //     "estimatePrices": 100,
+    //     "estimateScore": 300
+    //   }]
+    // }, {
+    //   "id": "123",
+    //   "cname": "sky",
+    //   "phone": "13611212722",
+    //   "address": "北京市丰台区大红门安乐小区一号楼二单元1003",
+    //   "appointmentNumber": "2017080213564",
+    //   "appointmentTime": "2018-11-21 14:20:00",
+    //   "confirmTime": "2018-08-21 14:20:00",
+    //   "actualTime": "2019-08-21 14:20:00",
+    //   "status": "已完成",
+    //   "estimateReservationList": [{
+    //     "typeId": 1,
+    //     "typeName": "玛瑙",
+    //     "unitType": "重量",
+    //     "quantity": "35",
+    //     "estimatePrices": 1100,
+    //     "estimateScore": 800
+    //   }],
+    //   "actualReservationList": [{
+    //     "typeId": 2,
+    //     "typeName": "废铁",
+    //     "unitType": "重量",
+    //     "quantity": "12.3",
+    //     "estimatePrices": 100,
+    //     "estimateScore": 300
+    //   }]
+    // }]
   },
   methods: {
     getBookStatus(type) {
