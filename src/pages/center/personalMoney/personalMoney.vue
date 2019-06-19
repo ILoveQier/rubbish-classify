@@ -24,7 +24,6 @@
         </div>
       </div>
     </scroll-view>
-
   </div>
 </template>
 <script>
@@ -32,29 +31,32 @@ export default {
   data() {
     return {
       moneyList: [],
-      total: 2003,
+      total: 0,
+      pageNum: 1
     }
   },
-  onLoad() {
+  async onLoad() {
     // TODO 获取用户的环保金明细
-    // let { data } = await this.$wxUtils.request(this.$api.GetGreenMoneyHistory, this)
-
-    this.moneyList = [{
-      "dealTime": "2019-05-24 00:00:00",
-      "incomeSource": "预约上门",
-      "incomeNum": 12.52,
-      "id": 123456321
-    }, {
-      "dealTime": "2019-05-24 00:00:00",
-      "incomeSource": "自主投放",
-      "incomeNum": 13.52,
-      "id": 123444321
-    }]
+    let { data } = await this.$wxUtils.request(this.$api.GetGreenMoneyHistory, this, { pageNum: this.pageNum, pageSize: 10 })
+    this.moneyList = data.data
+    this.total = data.total
+    // this.moneyList = [{
+    //   "dealTime": "2019-05-24 00:00:00",
+    //   "incomeSource": "预约上门",
+    //   "incomeNum": 12.52,
+    //   "id": 123456321
+    // }, {
+    //   "dealTime": "2019-05-24 00:00:00",
+    //   "incomeSource": "自主投放",
+    //   "incomeNum": 13.52,
+    //   "id": 123444321
+    // }]
   },
   methods: {
     // todo 滚动到底部请求数据
-    scrolltolower(e) {
-      console.log(e);
+    async scrolltolower(e) {
+      let { data } = await this.$wxUtils.request(this.$api.GetGreenMoneyHistory, this, { pageNum: this.pageNum++, pageSize: 10 })
+      this.moneyList.concat(data.data) 
     }
   },
 } 
