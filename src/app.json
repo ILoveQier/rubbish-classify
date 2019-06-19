@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/index/main",
     "pages/center/main",
     "pages/home/main",
     "pages/home/book/main",
-    "pages/index/main",
     "pages/index/user/main",
     "pages/index/manager/main",
     "pages/home/self/main",

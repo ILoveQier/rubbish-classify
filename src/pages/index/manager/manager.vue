@@ -38,7 +38,6 @@ export default {
         this.$wxUtils.showModal({ content: '请填写完毕', showCancel: false })
         return
       }
-
       let { data, res } = await this.$wxUtils.request(this.$api.SorterBind, this, {
         phone: this.phone,
         password: this.password,
@@ -54,7 +53,7 @@ export default {
           url: "/pages/home/main",
         })
       } else {
-        this.$wxUtils.showModal({ title: '登录失败', content: '请重新登录', showCancel: false })
+        this.$wxUtils.showModal({ title: '登录失败', content: '用户名或密码错误', showCancel: false })
       }
     }
   },

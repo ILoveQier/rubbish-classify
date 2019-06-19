@@ -48,6 +48,7 @@ export default {
     checkLogin: async function (e) {
       let time = new Date()
       let createTime = wx.getStorageSync('createTime')
+      let role = wx.getStorageSync('role')
       let token = wx.getStorageSync('token')
       if (!token || (time.getTime() - createTime > 10 * 3600 * 1000)) {
         //不存在token,或者时间大于10分钟，调用登录
@@ -59,6 +60,7 @@ export default {
           }
         })
       } else {
+        this.$store.state.role = role
         //token有效
         wx.switchTab({
           url: "/pages/home/main",
@@ -73,23 +75,12 @@ export default {
           userInfo: e.mp.detail,
           code: this.code,
         })
-        // let data = {
-        //   "userInfo": {
-        //     "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132",
-        //     "city": "",
-        //     "gender": 1,
-        //     "nickName": "SKY",
-        //     "province": ""
-        //   },
-        //   "userId": 25,
-        //   "token": "v7ywu2zrcrgmlcrt2bwklw5zu4afqhm4",
-        //   "roleType": ""
-        // }
         //存储用户信息
         //分配角色
         this.$store.state.role = data.roleType
         wx.setStorageSync('userInfo', data.userInfo)
         wx.setStorageSync('token', data.token)
+        wx.setStorageSync('role', data.roleType)
         //将当前时间存到本地存储
         let createTime = new Date()
         wx.setStorageSync('createTime', createTime.getTime())
