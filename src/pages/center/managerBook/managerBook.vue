@@ -2,89 +2,91 @@
   <div class="manager-book-container">
     <div class="manager-book-content">
       <div class="manager-book-nav">
-        <div :class="{'selected':tab === 1}"
+        <div :class="{'selected':status === ''}"
              class="nav"
-             @click="getBookStatus(1)">全部</div>
-        <div :class="{'selected':tab === 2}"
+             @click="getBookStatus('')">全部</div>
+        <div :class="{'selected':status === '待接单'}"
              class="nav"
-             @click="getBookStatus(2)">未确认订单</div>
-        <div :class="{'selected':tab === 3}"
+             @click="getBookStatus('待接单')">未确认订单</div>
+        <div :class="{'selected':status === '已确认'}"
              class="nav"
-             @click="getBookStatus(3)">已确认订单</div>
-        <div :class="{'selected':tab === 4}"
+             @click="getBookStatus('已确认')">已确认订单</div>
+        <div :class="{'selected':status === '已取消'}"
              class="nav"
-             @click="getBookStatus(4)">已取消</div>
-        <div :class="{'selected':tab === 5}"
+             @click="getBookStatus('已取消')">已取消</div>
+        <div :class="{'selected':status === '已完成'}"
              class="nav"
-             @click="getBookStatus(5)">已完成</div>
+             @click="getBookStatus('已完成')">已完成</div>
       </div>
       <div class="manager-book-wrap">
         <div class=" manager-book-inner"
-             v-for="(item,i) in infos"
+             @click="goDetail(book)"
+             v-for="(book,i) in books"
              :key="i">
           <div class="book-info"
-               v-if="tab===2"
                style="border-bottom:2rpx solid #fff;">
             <div style="display:flex;align-items:center;justify-content:space-between">
-              <span style="margin-right:30rpx">姓名</span>
+              <span style="margin-right:30rpx">{{book.realName}}</span>
               <div>
                 <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/phone.png"
                      style="width:50rpx;height:50rpx;vertical-align:middle">
-                <span>18301469837</span>
+                <span>{{book.phone}}</span>
               </div>
             </div>
-            <div>
-              <span>辽宁省东港市孤山镇</span>
-              <span>XXXXXXXXXXXXXXXXXXXXXXXX</span>
+            <div style="margin:10rpx 0">
+              <span>{{book.address}}</span>
             </div>
-
           </div>
-          <div class="book-info"
-               @click="goDetail('managerReview')">
+          <div class="book-info">
             <div>
               <span style="margin-right:30rpx">预约单号:</span>
-              <span>254855454</span>
+              <span>{{book.id}}</span>
             </div>
-            <div>
+            <div style="margin:20rpx 0;">
               <span style="margin-right:30rpx">预约时间:</span>
-              <span>2019/05/30 07：00 - 11：00</span>
+              <span>{{book.appointmentTime}}</span>
             </div>
-            <div>
-              <span style="margin-right:30rpx">玻璃</span>
-              <span style="margin-right:30rpx">6KG</span>
+            <div v-for="appointItem in book.appointmentList"
+                 style="margin:10rpx 0"
+                 v-if="appointItem.mark == 0"
+                 :key="appointItem">
+              <span style="margin-right:30rpx">{{appointItem.typeName}}</span>
+              <span style="margin-right:30rpx">{{appointItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">7</span>
+              <span style="color:#FF915A;">{{appointItem.estimatePrices}}</span>
             </div>
             <div class="status">
-              <span v-if="content === '2'"
+              <span v-if="book.status === '待接单'"
                     style="color:#FF995E">待接单</span>
-              <span v-if="content === '3'"
-                    style="color:#FF995E">已接单</span>
-              <span v-if="content === '4'"
+              <span v-if="book.status === '已确认'"
+                    style="color:#FF995E">已确认</span>
+              <span v-if="book.status === '已取消'"
                     style="color:#999">已取消</span>
-              <span v-if="content === '5'"
+              <span v-if="book.status === '已完成'"
                     style="color:#0A9E96">已完成</span>
             </div>
           </div>
           <div class="book-confirm"
-               v-if="content === '2'||content === '3'">
-            <button @click="confirmBook"
-                    v-if="content === '2'">确认接单</button>
+               v-if="book.status === '待接单'||book.status === '已确认'">
+            <button @click.stop="confirmBook(book)"
+                    v-if="book.status === '待接单'">确认接单</button>
             <button style="color:#999;border-color:#999"
                     v-else>已确认接单</button>
           </div>
           <div class="book-finish"
-               v-if="content === '5'">
+               v-if="status === '已完成'">
             <div>
               <span style="margin-right:30rpx">上门回收时间:</span>
-              <span>2019/05/30 07：00 - 11：00</span>
+              <span>{{book.actualTime}}</span>
             </div>
-            <div v-for="(item,index) in 3"
-                 :key="index">
-              <span style="margin-right:30rpx">玻璃</span>
-              <span style="margin-right:30rpx">6KG</span>
+            <div v-for="finishItem in book.appointmentList"
+                 style="margin:10rpx 0"
+                 v-if="finishItem.mark == 1"
+                 :key="finishItem">
+              <span style="margin-right:30rpx">{{finishItem.typeName}}</span>
+              <span style="margin-right:30rpx">{{finishItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">7</span>
+              <span style="color:#FF915A;">{{finishItem.estimatePrices}}</span>
             </div>
           </div>
         </div>
@@ -97,40 +99,49 @@ export default {
   data() {
     return {
       tab: 1,
-      content: '',
-      infos: [1, 2, 3, 5, 2, 5, 2, 2, 22, 2]
+      status: '',
+      books: []
     }
   },
   onReachBottom() {
-    this.infos.push(1)
+  },
+  async onShow() {
+    this.status = ''
+    // TODO 获取用户订单
+    let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status })
+    this.books = data.data
   },
   methods: {
-    getBookStatus(type) {
-      this.tab = type
-      if (type === 1) {
-        this.content = '1'
-      } else if (type === 2) {
-        this.content = '2'
-      } else if (type === 3) {
-        this.content = '3'
-      } else if (type === 4) {
-        this.content = '4'
-      } else if (type === 5) {
-        this.content = '5'
-      }
+    async getBookStatus(type) {
+      this.status = type
+      // TODO 根据不同状态 获取用户订单
+      let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status })
+      this.books = data.data
     },
-    goDetail(type) {
-      if (this.content === '3') {
+    goDetail(book) {
+      if (book.status === '待接单') {
         wx.navigateTo({
           // TODO 传id
-          url: '/pages/center/' + type + '/main?id=1',
+          url: '/pages/center/managerReview/main?id=' + book.id,
         })
       }
     },
-    confirmBook() {
-      this.$wxUtils.showModal({ content: '是否确认接单' }).then(res => {
-
-      })
+    async confirmBook(book) {
+      this.$wxUtils.showModal({ content: '是否确认接单' })
+        .then(async res => {
+          if (res === 'confirm') {
+            let { res } = await this.$wxUtils.request(this.$api.SorterConfirm, this, { id: book.id })
+            if (res.errno === 0) {
+              wx.showToast({
+                title: '已确认接单',
+                duration: 1000,
+                mask: true,
+              });
+              await this.$wxUtils.sleep(1000)
+              this.getBookStatus(this.status)
+            }
+          }
+        })
     }
   },
 }
@@ -152,16 +163,11 @@ export default {
     flex-direction: column;
     .manager-book-nav {
       width: 100%;
-      position: fixed;
+      padding: 0 30rpx;
+      box-sizing: border-box;
       display: flex;
       align-items: center;
-      overflow: hidden;
-      background: #fff;
-      z-index: 99;
-      top: 0;
-      height: 100rpx;
-      justify-content: space-around;
-
+      justify-content: space-between;
       .nav {
         border-bottom: 10rpx solid #fff;
         width: 120rpx;
@@ -173,10 +179,12 @@ export default {
       }
     }
     .manager-book-wrap {
-      margin-top: 100rpx;
+      margin-top: 30rpx;
       display: flex;
       flex-direction: column;
       width: 95%;
+      height: 90%;
+      overflow: scroll;
       .manager-book-inner {
         margin-bottom: 20rpx;
         background-color: #d7d7d7;

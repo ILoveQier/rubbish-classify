@@ -23,5 +23,6 @@ module.exports = {
   CancelAppointment: API_BASE_URL + 'recycle/cancelAppointment', //取消预约单
   GetOrderDetail: API_BASE_URL + 'recycle/getOrderDetail', //根据id获取订单详情
   AuditChecklist: API_BASE_URL + 'recycle/auditChecklist', //分拣员审核预约订单
+  SorterConfirm: API_BASE_URL + 'recycle/sorterConfirm', //分拣员确认接单
   UpdateSorterConfirmTime: API_BASE_URL + 'recycle/updateSorterConfirmTime', //分拣员确认上门时间
 };

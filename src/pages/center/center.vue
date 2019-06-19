@@ -109,12 +109,12 @@ export default {
     'role'
   ]),
   async onShow() {
-    if (this.role === '分拣员') {
-      // TODO 分拣员的预约单数量
-      // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrderCount, this)
-      this.total = 34
-    }
     // TODO 用户信息
+    if (this.role === 1) {
+      // TODO 分拣员的预约单数量
+      let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrderCount, this, { status: '' })
+      this.total = data.total
+    }
     let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this, { roleType: this.role })
     this.roleObj = data.userInfo
   },
