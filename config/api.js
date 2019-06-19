@@ -8,12 +8,12 @@ const API_BASE_URL = 'https://testtra.treeyee.com' + root;
 module.exports = {
   AuthLoginByWeixin: API_BASE_URL + 'auth/login_by_weixin', //微信登录
   GetCheckCodeByPhone: API_BASE_URL + 'auth/getCheckCodeByPhone', //获取验证码
-  // GetAreasById: API_BASE_URL + 'address/getAreasById', //获取当前id下的所有级联地址
   UserRegister: API_BASE_URL + 'auth/register', //普通用户注册
   SorterBind: API_BASE_URL + 'auth/sorterBind', //分拣员登录
   GetCurrentUserInfo: API_BASE_URL + 'auth/getCurrentUserInfo', //获取用户信息
   UpdateNormal: API_BASE_URL + 'auth/updateNormal', //更新用户信息
   GetChildrenArea: API_BASE_URL + 'address/getChildrenArea', //获取级联地址
+  GetAreasById: API_BASE_URL + 'address/getAreasById', //获取当前id下的所有级联地址
   GetIdByDetailArea: API_BASE_URL + 'address/getIdByDetailArea', //获取级联地址
   GetGreenMoneyHistory: API_BASE_URL + 'recycle/getGreenMoneyHistory', //获取环保金明细
   GetCurrentUserOrderCount: API_BASE_URL + 'recycle/getCurrentUserOrderCount', //获取预约单数量

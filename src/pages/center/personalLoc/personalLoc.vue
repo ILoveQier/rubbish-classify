@@ -4,7 +4,7 @@
       <div class="location-item">
         <span>所在市</span>
         <picker @change="pickChange($event,'city')"
-                :range='addrObj.cityList'>
+                :range='addrObj.citys'>
           <div class="picker">
             {{addrObj.cityName || '--请选择--'}}
           </div>
@@ -14,7 +14,7 @@
            v-if="addrObj.cityName">
         <span>所在行政区</span>
         <picker @change="pickChange($event,'area')"
-                :range='addrObj.areaList'>
+                :range='addrObj.areas'>
           <div class="picker">
             {{addrObj.areaName || '--请选择--'}}
           </div>
@@ -25,7 +25,7 @@
            v-if="addrObj.areaName">
         <span>所在街道</span>
         <picker @change="pickChange($event,'street')"
-                :range='addrObj.streetList'>
+                :range='addrObj.streets'>
           <div class="picker">
             {{addrObj.streetName || '--请选择--'}}
           </div>
@@ -35,7 +35,7 @@
            v-if="addrObj.streetName">
         <span>所在社区</span>
         <picker @change="pickChange($event,'community')"
-                :range='addrObj.communityList'>
+                :range='addrObj.communitys'>
           <div class="picker">
             {{addrObj.communityName || '--请选择--'}}
           </div>
@@ -45,7 +45,7 @@
            v-if="addrObj.communityName">
         <span>所在小区</span>
         <picker @change="pickChange($event,'village')"
-                :range='addrObj.villageList'>
+                :range='addrObj.villages'>
           <div class="picker">
             {{addrObj.villageName || '--请选择--'}}
           </div>
@@ -54,9 +54,9 @@
       <div class="location-item">
         <span>所在号楼</span>
         <picker @change="pickChange($event,'building')"
-                :range='addrObj.buildingList'>
+                :range='addrObj.buildings'>
           <div class="picker">
-            {{addrObj.buildingName || '--请选择--'}}
+            {{loc.buildingNum || '--请选择--'}}
           </div>
         </picker>
       </div>
@@ -79,37 +79,46 @@ export default {
       addrObj: {},
       loc: {
         addrId: '',
-        addressDetail: '',
+        address: '',
+        buildingNum: '',
       }
     }
   },
-  onLoad() {
+  async onLoad() {
     let roleObj = JSON.parse(this.$getRoute().roleObj)
-    this.loc.addressDetail = roleObj.addressDetail
+    let id = roleObj.generalAddrId
+    this.loc.address = roleObj.addrDetail
+    this.loc.buildingNum = roleObj.addrBuilding
+    this.loc.addrId = id
     this.addrObj = {
       // 请求列表
-      cityList: ['北京市'],
-      areaList: [],
-      streetList: [],
-      communityList: [],
-      villageList: [],
-      buildingList: [],
+      citys: ['北京市'],
+      areas: [],
+      streets: [],
+      communitys: [],
+      villages: [],
+      buildings: [],
       cityName: roleObj.addrCity,
       areaName: roleObj.addrArea,
       streetName: roleObj.addrStreet,
       communityName: roleObj.addrCommunity,
       villageName: roleObj.addrVillage,
-      buildingName: roleObj.addrBuilding
+      buildingNum: roleObj.addrBuilding
+    }
+    // 根据id查询所有列表赋值
+    let { data } = await this.$wxUtils.request(this.$api.GetAreasById, this, { id })
+    for (const key in data) {
+      this.addrObj[key] = data[key]
     }
     for (let index = 1; index < 31; index++) {
-      this.addrObj.buildingList.push(index + '号楼')
+      this.addrObj.buildings.push(index + '号楼')
     }
   },
   methods: {
     async pickClick(type) {
       let name = type + 'Name'
       let index = this.nameList.indexOf(name) + 1
-      let list = this.nameList[index].replace('Name', 'List')
+      let list = this.nameList[index].replace('Name', 's')
       // 把之前值保留
       let obj = { cityName: '北京市' }
       for (let i2 = 0; i2 < index; i2++) {
@@ -120,9 +129,6 @@ export default {
       let res = data['areas']
       this.addrObj[list] = []
       for (let i = 0; i < res.length; i++) {
-        if (type === 'community') {
-          this.villagelist.push(res[i])
-        }
         this.addrObj[list].push(res[i].name)
       }
     },
@@ -130,12 +136,11 @@ export default {
       let val = e.mp.detail.value
       if (type === 'building') {
         // todo building 是干嘛的 字段在哪里
-        this.user.buildingNum = this.addrObj.buildingList[val]
+        this.loc.buildingNum = this.addrObj.buildings[val]
         return
       }
       let name = type + 'Name'
-      let list = type + 'List'
-      this.addrObj[name] = this.addrObj[list][val]
+      this.addrObj[name] = this.addrObj[type + 's'][val]
       if (type === 'village') {
         let obj = { cityName: '北京市' }
         // 获取所有值
@@ -144,9 +149,10 @@ export default {
         }
         // todo 查询最终小区
         let { data } = await this.$wxUtils.request(this.$api.GetIdByDetailArea, this, obj)
-        this.user.addrId = data.id
+        this.loc.addrId = data.id
         return
       }
+      this.loc.addrId = ''
       let index = this.nameList.indexOf(name) + 1
       // 把变动的之后值清空
       for (let i = index; i < this.nameList.length; i++) {
@@ -154,17 +160,28 @@ export default {
       }
       this.pickClick(type)
     },
-    saveLoc() {
+    async saveLoc() {
       if (!this.loc.addrId) {
         this.$wxUtils.showModal({ content: '请将地址填写完整', showCancel: false })
         return
       }
-      if (!this.loc.addressDetail) {
+      if (!this.loc.address) {
         this.$wxUtils.showModal({ content: '请填写详细地址', showCancel: false })
         return
       }
       // TODO 更新地址信息
-      // let { data } = await this.$wxUtils.request(this.$api.UpdateNormal, this,{...this.loc})
+      let { res } = await this.$wxUtils.request(this.$api.UpdateNormal, this, this.loc)
+      if (res.errno === 0) {
+        wx.showToast({
+          title: '更新成功',
+          duration: 1000,
+          mask: true
+        })
+        await this.$wxUtils.sleep(1000)
+        wx.navigateBack({
+          delta: 1
+        })
+      }
     }
   },
 } 
