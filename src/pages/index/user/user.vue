@@ -108,7 +108,7 @@
       <div class="phone-item">
         <span>短信验证码</span>
         <input type="number"
-               maxlength="10"
+               maxlength="6"
                v-model="user.phoneCode"
                style="width:200rpx;"
                placeholder="请输入"
@@ -156,7 +156,7 @@ export default {
       user: {
         realName: '',
         idNum: '',
-        gender: 0,
+        gender: '0',
         addrId: '',
         buildingNum: '',
         addressDetail: '',
@@ -304,7 +304,7 @@ export default {
           url: "/pages/home/main",
         })
       } else {
-        this.$wxUtils.showModal({ content: '注册失败', showCancel: false })
+        this.$wxUtils.showModal({ title: '注册失败', content: res.errmsg, showCancel: false })
       }
     }
   },

@@ -4,7 +4,7 @@
       <img :src="roleObj.avatarUrl">
       <div class="info-detail">
         <span>{{roleObj.userName}}</span>
-        <div v-if="role==='普通用户1'">
+        <div v-if="role==0">
           <span>当前可提现环保金：{{roleObj.envirTotal}}</span>
           <div>
             <span>文明积分：{{roleObj.civiTotal}}</span>
@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div v-if="role==='普通用户1'"
+    <div v-if="role==0"
          class="center-record">
       <div class="record-item">
         <div class="record-title">
@@ -115,26 +115,8 @@ export default {
       this.total = 34
     }
     // TODO 用户信息
-    // let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this)
-    this.roleObj = {
-      "nickName": "sky",
-      "userName": "sky",
-      "realName": "小凡",
-      "gender": "0",
-      "phone": "13622103217",
-      "idNum": "110226199402123487",
-      "addrCity": "北京市",
-      "addrArea": "丰台区",
-      "addrStreet": "右安门街道",
-      "addrCommunity": "开阳里第一社区",
-      "addrVillage": "开阳里一区",
-      "addrBuilding": "1号楼",
-      "addressDetail": "2单元1203室",
-      "envirTotal": "200",
-      "rewardTotal": "100",
-      "civiTotal": "100",
-      "avatarUrl": "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIwicXLGFk5PDpRNuDbpomhBibGeMzxHicGCeJC7zibLWiaLHwTmpM3QsKBQZp2DxMSnDiaAfuFNhgich30w/132"
-    }
+    let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this, { roleType: this.role })
+    this.roleObj = data.userInfo
   },
   methods: {
     goDetail(type) {

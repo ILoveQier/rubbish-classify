@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/center/main",
     "pages/index/user/main",
     "pages/index/manager/main",
     "pages/index/main",
@@ -7,7 +8,6 @@
     "pages/home/main",
     "pages/center/managerReview/main",
     "pages/center/managerBook/main",
-    "pages/center/main",
     "pages/home/book/main",
     "pages/center/personalBook/main",
     "pages/center/personalMoney/main",
