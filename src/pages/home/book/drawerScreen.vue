@@ -157,7 +157,8 @@ export default {
       this.bigDetail = ''
       this.bigDetailId = -1
       this.bigGoodNum = 1
-      this.greenMoney = 0
+      this.greenMoney = 0,
+      this.perMoney = 0
     },
     countWeight(item) {
       this.showWeight = false

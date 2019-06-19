@@ -134,105 +134,16 @@ export default {
     // todo 离开后清空
     this.tab = 1
   },
-  onLoad() {
+  async onLoad() {
     // TODO 获取可回收垃圾类型
-    // let { data } = await this.$wxUtils.request(this.$api.GetRecyclables, this)
-    let data = [{
-      "standardId": 1,
-      "standardType": "可回收小件",
-      "describe": "小件商品回收",
-      "data": [{
-        "itemId": 1,
-        "itemType": "金属",
-        "unit": "重量",//重量或数量
-        "data": [{
-          "detailId": 1,//最终需要回传的垃圾类型id
-          "detailType": "废铜",
-          "greenBonuses": "1.2",//单位环保金
-          "greenPoints": "80"//单位奖励积分
-        },
-        {
-          "detailId": 2,
-          "detailType": "赤金",
-          "greenBonuses": "330",
-          "greenPoints": "9000"
-        }
-        ]
-      },
-      {
-        "itemId": 2,
-        "itemType": "宝特瓶",
-        "unit": "数量",
-        "data": [{
-          "detailId": 3,
-          "detailType": "色拉油瓶",
-          "greenBonuses": "0.5",
-          "greenPoints": "4"
-        },
-        {
-          "detailId": 4,
-          "detailType": "矿泉水瓶",
-          "greenBonuses": "0.2",
-          "greenPoints": "2"
-        }
-        ]
+    let { data } = await this.$wxUtils.request(this.$api.GetRecyclables, this)
+    data.filter(e=>{
+      if(e.standardType === '可回收小件') {
+        this.smallGoods = e.data
+      } else if(e.standardType === '可回收大件') {
+        this.bigGoods = e.data
       }
-      ]
-    },
-    {
-      "standardId": 2,
-      "standardType": "可回收大件",
-      "describe": "大件商品回收",
-      "data": [{
-        "itemId": 3,
-        "itemType": "冰箱",
-        "unit": "数量",
-        "data": [{
-          "detailId": 5,
-          "detailType": "冰箱A",
-          "greenBonuses": "200",
-          "greenPoints": "800"
-        }, {
-          "detailId": 6,
-          "detailType": "冰箱B",
-          "greenBonuses": "330",
-          "greenPoints": "9000"
-        }]
-      }, {
-        "itemId": 4,
-        "itemType": "彩电",
-        "unit": "数量",
-        "data": [{
-          "detailId": 5,
-          "detailType": "超级夜景",
-          "greenBonuses": "220",
-          "greenPoints": "800"
-        }, {
-          "detailId": 6,
-          "detailType": "松下彩电",
-          "greenBonuses": "230",
-          "greenPoints": "9000"
-        }]
-      }, {
-        "itemId": 5,
-        "itemType": "洗衣机",
-        "unit": "数量",
-        "data": [{
-          "detailId": 5,
-          "detailType": "垃圾洗衣机",
-          "greenBonuses": "100",
-          "greenPoints": "800"
-        }, {
-          "detailId": 6,
-          "detailType": "普通洗衣机",
-          "greenBonuses": "320",
-          "greenPoints": "9000"
-        }]
-      }]
-    }
-    ]
-    this.smallGoods = data[0].data
-    this.bigGoods = data[1].data
+    })
   },
   methods: {
     switchTab(tab) {
@@ -247,6 +158,7 @@ export default {
       this.bigDetailId = -1
       this.bigGoodNum = 1
       this.greenMoney = 0
+      this.perMoney = 0
     },
     countWeight(item) {
       this.showWeight = false
@@ -307,6 +219,7 @@ export default {
       }
       this.smallGoodId = smallGood.itemId
       this.smallDetail = ''
+      this.perMoney = 0
       this.greenMoney = 0
       this.smallDetailId = -1
     },
@@ -407,7 +320,7 @@ export default {
         }
       }
       .drawer-wrap {
-        padding: 20rpx 50rpx;
+        padding: 50rpx;
         .drawer-inner {
           display: flex;
           flex-direction: column;
@@ -434,7 +347,6 @@ export default {
                 .val-item {
                   font-size: 25rpx;
                   width: 100%;
-                  height: 50rpx;
                   padding: 10rpx 0;
                   line-height: 50rpx;
                   text-align: center;
@@ -442,6 +354,7 @@ export default {
               }
               .item-details {
                 width: 150rpx;
+                overflow: hidden;
                 height: 40rpx;
                 background-color: #fff;
                 border: 2rpx solid #eee;

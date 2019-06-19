@@ -69,9 +69,9 @@
       <div class="recycle-title"
            v-else>
         <span style="width:40%">回收清单</span>
-        <span style="flex:1">奖励</span>
+        <span>预估奖励</span>
         <div class="continue-add">
-          <span>继续添加</span>
+          <!-- <span>继续添加</span> -->
           <span class="add"
                 @click="showMask=true"></span>
         </div>
@@ -79,15 +79,15 @@
       <div class="add-wrap"
            v-if="recycleList.length === 0">
         <button @click="showMask=true">立即添加</button>
-        <span style="font-size:25rpx">请添加您需要上门回收的物品</span>
+        <span>请添加您需要上门回收的物品</span>
       </div>
       <div v-else
            class="recycle-lists">
         <div v-for="(item,i) in recycleList"
              :key="i"
              class="recycle-item">
-          <span style="width:40%">{{item.detail}}({{item.quantity}})</span>
-          <span style="flex:1">{{item.bonus}}积分</span>
+          <span style="width:40%;overflow:hidden;text-overflow:ellipsis;white-space: nowrap;">{{item.detail}}({{item.quantity}})</span>
+          <span>{{item.bonus}}积分</span>
           <span class="minus"
                 @click="deleteRecycle(item,i)"></span>
         </div>
@@ -116,10 +116,10 @@ export default {
   components: {
     DrawerScreen
   },
-  onLoad() {
+  async onShow() {
     let id = this.$getRoute().id
     // TODO 根据id查询订单详情
-    // let { data } = await this.$wxUtils.request(this.$api.GetOrderDetail, this,{id})
+    let { data } = await this.$wxUtils.request(this.$api.GetOrderDetail, this, { id })
     this.order = {
       "id": "123",
       "cname": "sky",
@@ -149,7 +149,7 @@ export default {
     }
   },
   methods: {
-    confirmRecycle() {
+    async confirmRecycle() {
       if (!this.confirmDate || !this.confirmTime) {
         this.$wxUtils.showModal({ content: '请选择上门时间', showCancel: false })
         return
@@ -158,11 +158,27 @@ export default {
         this.$wxUtils.showModal({ content: '请选择回收物品', showCancel: false })
         return
       }
-      let id = this.order.appointmentNumber
-      let confirmTime = this.confirmDate + " " + this.confirmTime
-      // TODO 更新上门时间
-      // let { data } = await this.$wxUtils.request(this.$api.UpdateSorterConfirmTime, this,{id,confirmTime})
-
+      this.$wxUtils.showModal({ content: '确认回收吗？' })
+        .then(async res => {
+          if (res === 'confirm') {
+            let id = this.order.appointmentNumber
+            let confirmTime = this.confirmDate + ' ' + this.confirmTime + ':00'
+            // TODO 确认上门时间
+            let { res: res1 } = await this.$wxUtils.request(this.$api.UpdateSorterConfirmTime, this, { id, confirmTime })
+            // TODO 创建预约单
+            let reservationList = []
+            for (let index = 0; index < this.recycleList.length; index++) {
+              let obj = {}
+              obj.typeId = this.recycleList[index].typeId
+              obj.quantity = this.recycleList[index].quantity
+              reservationList.push(obj)
+            }
+            let { res: res2 } = await this.$wxUtils.request(this.$api.AuditChecklist, this, { id, reservationList })
+            wx.navigateBack({
+              delta: 1
+            });
+          }
+        })
     },
     confirmChange(e, type) {
       if (type === 'date') {

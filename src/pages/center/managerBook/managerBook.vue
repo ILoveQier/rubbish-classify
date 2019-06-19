@@ -119,7 +119,8 @@ export default {
       this.books = data.data
     },
     goDetail(book) {
-      if (book.status === '待接单') {
+      // todo 确认一下是已确认还是已接单
+      if (book.status === '已接单') {
         wx.navigateTo({
           // TODO 传id
           url: '/pages/center/managerReview/main?id=' + book.id,
