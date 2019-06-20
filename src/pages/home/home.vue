@@ -2,8 +2,6 @@
   <div class="home-container">
     <web-view :src='urlss'
               v-if="urlss"></web-view>
-    <!-- <web-view :src='moneyUrl'
-              v-if="moneyUrl"></web-view> -->
     <div v-if="role==0"
          class="home-item">
       <span>可回收垃圾0.8元/公斤兑换环保金
@@ -48,20 +46,6 @@ export default {
           if (res1 === 'confirm') {
             // todo 真实提现
             this.moneyUrl = res.data
-            // let { res } = await this.$wxUtils.requestGet(this.$api.GetPlatFormLoginUrl, this)
-            // var reqTask = wx.request({
-            //   url: this.moneyUrl,
-            //   data: {},
-            //   header: {'content-type':'application/json'},
-            //   method: 'GET',
-            //   dataType: 'json',
-            //   responseType: 'text',
-            //   success: (result)=>{
-
-            //   },
-            //   fail: ()=>{},
-            //   complete: ()=>{}
-            // });
           }
         })
         // wx.showToast({
