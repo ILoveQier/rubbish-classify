@@ -2,12 +2,12 @@
   <div class="self-container">
     <div class="self-item"
          @click="chooseOther('otherLoc')">
-      <span>右安门街道服务站</span>
+      <span>{{self.loc.name || '选择服务站'}}</span>
       <span style="font-size:25rpx">选择其他垃圾投放点 ></span>
     </div>
     <div class="self-item"
          @click="chooseOther('userInfo')">
-      <span>选择居民信息</span>
+      <span>{{self.user.realName || '选择居民信息'}}</span>
       <span> ></span>
     </div>
     <div class="recycle-info">
@@ -29,7 +29,7 @@
            v-if="recycleList.length === 0">
         <button @click="showMask=true">立即添加</button>
       </div>
-       <div v-else
+      <div v-else
            class="recycle-lists">
         <div v-for="(item,i) in recycleList"
              :key="i"
@@ -51,17 +51,23 @@
 </template>
 <script>
 import DrawerScreenSelf from './drawerScreenSelf'
-
+import { mapState } from 'vuex'
 export default {
   components: {
     DrawerScreenSelf
+  },
+  computed: {
+    ...mapState(['self'])
   },
   data() {
     return {
       showMask: false,
       preGreenMoney: 0,
-      recycleList: []
+      recycleList: [],
     }
+  },
+  onLoad() {
+
   },
   methods: {
     putRecycle(item) {

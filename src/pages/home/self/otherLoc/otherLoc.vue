@@ -45,9 +45,11 @@ export default {
   },
   methods: {
     getLoc(loc) {
+      this.$store.state.self.loc = loc
       // todo 选择了地址
-      console.log(loc);
-      
+      wx.navigateBack({
+        delta: 1
+      })
     },
     inputVal(e) {
       let val = e.mp.detail.value

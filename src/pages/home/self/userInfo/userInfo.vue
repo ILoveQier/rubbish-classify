@@ -21,6 +21,7 @@
     <div class="user-wrap">
       <div class="user-item"
            v-for="user in users"
+           @click="getUser(user)"
            :key="user">
         <div style="margin-bottom:20rpx">
           <span>{{user.realName}}</span>
@@ -43,14 +44,15 @@ export default {
   },
   async onLoad() {
     let { data } = await this.$wxUtils.request(this.$api.GetAllUserBaseInfo, this)
-    // todo 测试数据
     this.users = data.userInfo
   },
   methods: {
     getUser(user) {
+      this.$store.state.self.user = user
       // todo 选择了地址
-      console.log(user);
-
+     wx.navigateBack({
+       delta: 1
+     })
     },
     inputVal(e) {
       let val = e.mp.detail.value
