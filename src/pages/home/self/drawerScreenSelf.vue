@@ -265,25 +265,25 @@ export default {
       let item = Object.create(null)
       if (this.tab === 1) {
         // 代表是小件
-        item.type = 'small'
+        item.unit = 'KG'
         item.detail = this.smallDetail
         item.typeId = this.smallDetailId
         item.quantity = this.smallWeight
       } else if (this.tab === 2) {
         // 大件
-        item.type = 'big'
+        item.unit = '个'
         item.detail = this.bigDetail
         item.typeId = this.bigDetailId
         item.quantity = this.bigGoodNum
       } else if (this.tab === 3) {
         // 厨余垃圾
-        item.type = 'kitchen'
+        item.unit = 'KG'
         item.detail = '厨余垃圾'
         item.typeId = this.kitchenId
         item.quantity = this.kitchenWeight
       } else if (this.tab === 4) {
         // 其他垃圾
-        item.type = 'other'
+        item.unit = 'KG'
         item.detail = '其他垃圾'
         item.typeId = this.otherId
         item.quantity = this.otherWeight

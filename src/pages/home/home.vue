@@ -72,7 +72,6 @@ export default {
       } else {
         this.$wxUtils.showModal({ content: res.errmsg, showCancel: false })
       }
-
     },
     goBook() {
       wx.navigateTo({

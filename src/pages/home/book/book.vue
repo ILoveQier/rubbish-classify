@@ -46,11 +46,11 @@
         <div class="recycle-title"
              v-else>
           <span style="width:40%">回收清单</span>
-          <span>预估奖励</span>
-          <div class="continue-add">
-            <!-- <span>继续添加</span> -->
-            <span class="add"
-                  @click="showMask=true"></span>
+          <span style="flex:1">预估奖励</span>
+          <div class="continue-add"
+               @click="showMask=true">
+            <span>继续添加</span>
+            <span class="add"></span>
           </div>
         </div>
         <div class="add-wrap"
@@ -63,8 +63,8 @@
           <div v-for="(item,i) in recycleList"
                :key="i"
                class="recycle-item">
-            <span style="width:40%;overflow:hidden;text-overflow:ellipsis;white-space: nowrap;">{{item.detail}}({{item.quantity}})</span>
-            <span>{{item.bonus}}积分</span>
+            <span style="width:35%">{{item.detail}}({{item.quantity}}{{item.unit}})</span>
+            <span style="width:20%;margin-right:220rpx">{{item.bonus}}积分</span>
             <span class="minus"
                   @click="deleteRecycle(item,i)"></span>
           </div>
@@ -148,6 +148,7 @@ export default {
       this.showMask = false
       this.preGreenMoney = (parseFloat(this.preGreenMoney) + parseFloat(item.bonus)).toFixed(1)
       let obj = {
+        "unit": item.unit,
         "detail": item.detail,
         "typeId": item.typeId,
         "quantity": item.quantity,
@@ -329,8 +330,7 @@ export default {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          height: 50rpx;
-
+          margin: 20rpx 0;
           .minus {
             display: block;
             width: 30rpx;

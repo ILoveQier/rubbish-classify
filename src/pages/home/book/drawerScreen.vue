@@ -231,13 +231,13 @@ export default {
       let item = Object.create(null)
       if (this.tab === 1) {
         // 代表是小件
-        item.type = 'small'
+        item.unit = 'KG'
         item.detail = this.smallDetail
         item.typeId = this.smallDetailId
         item.quantity = this.smallWeight
       } else {
         // 大件
-        item.type = 'big'
+        item.unit = '个'
         item.detail = this.bigDetail
         item.typeId = this.bigDetailId
         item.quantity = this.bigGoodNum
