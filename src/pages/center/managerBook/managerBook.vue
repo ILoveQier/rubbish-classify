@@ -53,7 +53,7 @@
               <span style="margin-right:30rpx">{{appointItem.typeName}}</span>
               <span style="margin-right:30rpx">{{appointItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">{{appointItem.estimatePrices}}</span>
+              <span style="color:#FF915A;">{{appointItem.bonus}}</span>
             </div>
             <div class="status">
               <span v-if="book.status === '待接单'"
@@ -77,7 +77,7 @@
                v-if="status === '已完成'">
             <div>
               <span style="margin-right:30rpx">上门回收时间:</span>
-              <span>{{book.actualTime}}</span>
+              <span>{{book.confirmTime}}</span>
             </div>
             <div v-for="finishItem in book.appointmentList"
                  style="margin:10rpx 0"
@@ -86,7 +86,7 @@
               <span style="margin-right:30rpx">{{finishItem.typeName}}</span>
               <span style="margin-right:30rpx">{{finishItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">{{finishItem.estimatePrices}}</span>
+              <span style="color:#FF915A;">{{finishItem.bonus}}</span>
             </div>
           </div>
         </div>

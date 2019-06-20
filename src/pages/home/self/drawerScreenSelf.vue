@@ -152,6 +152,8 @@ export default {
       // 厨余和其他
       kitchenWeight: 1,
       otherWeight: 1,
+      kitchenId: -1,
+      otherId: -1,
     }
   },
   onUnload() {
@@ -166,6 +168,10 @@ export default {
         this.smallGoods = e.data
       } else if (e.standardType === '可回收大件') {
         this.bigGoods = e.data
+      } else if (e.standardType === '厨余垃圾') {
+        this.kitchenId = e.data[0].data[0].detailId
+      } else if (e.standardType === '其他垃圾') {
+        this.otherId = e.data[0].data[0].detailId
       }
     })
   },
@@ -273,11 +279,13 @@ export default {
         // 厨余垃圾
         item.type = 'kitchen'
         item.detail = '厨余垃圾'
+        item.typeId = this.kitchenId
         item.quantity = this.kitchenWeight
       } else if (this.tab === 4) {
         // 其他垃圾
         item.type = 'other'
         item.detail = '其他垃圾'
+        item.typeId = this.otherId
         item.quantity = this.otherWeight
       }
       item.bonus = this.greenMoney

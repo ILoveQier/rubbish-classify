@@ -42,7 +42,8 @@
       </div>
     </div>
     <button class="confirm"
-            :class="{'confirmReady':recycleList.length > 0}">确认投放</button>
+            :class="{'confirmReady':recycleList.length > 0}"
+            @click="confirmPush">确认投放</button>
     <DrawerScreenSelf :showMask='showMask'
                       @putRecycle='putRecycle'
                       @close='showMask=false'></DrawerScreenSelf>
@@ -85,13 +86,49 @@ export default {
       this.preGreenMoney -= item.bonus
       this.recycleList.splice(i, 1)
     },
+    async confirmPush() {
+      let pointId = this.self.loc.rpid
+      let userId = this.self.user.uid
+      if (!pointId || !userId) {
+        let content = '请选择' + (this.self.loc.rpid ? '居民' : '投放地点')
+        this.$wxUtils.showModal({ content: content, showCancel: false })
+        return
+      }
+      if (this.recycleList.length === 0) {
+        this.$wxUtils.showModal({ content: '请选择要回收的物品', showCancel: false })
+        return
+      }
+      this.$wxUtils.showModal({ title: '温馨提示', content: '厨余垃圾不予上门回收服务可回收垃圾满5kg才可预约上门回收（除废旧大家电）回收物体不明确时请参考分类', confirmText: '确认投放' })
+        .then(async res => {
+          if (res === 'confirm') {
+            // TODO 创建自主投放
+            let list = []
+            for (let index = 0; index < this.recycleList.length; index++) {
+              let obj = {}
+              obj.typeId = this.recycleList[index].typeId
+              obj.quantity = this.recycleList[index].quantity
+              list.push(obj)
+            }
+            // todo
+            let { res } = await this.$wxUtils.request(this.$api.CreateSelfhelpList, this, { list, pointId, userId })
+            wx.showToast({
+              title: res.errno === 0 ? '创建成功' : res.errmsg,
+              duration: 1500,
+              mask: true,
+            })
+            this.$wxUtils.sleep(1500)
+            wx.redirectTo({
+              url: '/pages/home/main',
+            });
+          }
+        })
+    },
     chooseOther(type) {
       wx.navigateTo({
         url: '/pages/home/self/' + type + '/main',
       })
     }
   },
-
 }
 </script>
 <style lang="less" scoped>

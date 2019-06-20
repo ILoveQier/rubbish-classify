@@ -1,10 +1,10 @@
 {
   "pages": [
+    "pages/index/main",
+    "pages/center/main",
+    "pages/home/main",
     "pages/home/self/main",
     "pages/center/managerReview/main",
-    "pages/index/main",
-    "pages/home/main",
-    "pages/center/main",
     "pages/center/managerBook/main",
     "pages/center/personalBook/main",
     "pages/home/book/main",
