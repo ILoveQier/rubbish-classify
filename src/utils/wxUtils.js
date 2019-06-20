@@ -64,5 +64,5 @@ export default {
         this.showModal('请求失败', 'err', {})
       })
     })
-  }
+  },
 }

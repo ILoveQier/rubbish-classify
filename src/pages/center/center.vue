@@ -112,7 +112,7 @@ export default {
     // TODO 用户信息
     if (this.role === 1) {
       // TODO 分拣员的预约单数量
-      let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrderCount, this, { status: '' })
+      let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrderCount, this, { status: '', userType: 1 })
       this.total = data.total
     }
     let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserInfo, this, { roleType: this.role })

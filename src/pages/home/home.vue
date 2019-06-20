@@ -1,5 +1,7 @@
 <template>
   <div class="home-container">
+    <web-view :src='urlss'
+              v-if="urlss"></web-view>
     <!-- <web-view :src='moneyUrl'
               v-if="moneyUrl"></web-view> -->
     <div v-if="role==0"
@@ -23,7 +25,8 @@ import { mapState } from "vuex"
 export default {
   data() {
     return {
-      moneyUrl: ''
+      moneyUrl: '',
+      urlss: ''
     }
   },
   computed: mapState([
@@ -31,6 +34,8 @@ export default {
   ]),
   methods: {
     async withDraw() {
+      let url = this.$api.GetPlatFormLoginUrl
+      this.urlss = url + '?amount=1.1'
       let { data } = await this.$wxUtils.request(this.$api.GetGreenMoneyHistory, this, { pageNum: 1, pageSize: 10 })
       let amount = 2
       let { res } = await this.$wxUtils.request(this.$api.GetPlatFormLoginUrl, this, { amount })
@@ -43,22 +48,20 @@ export default {
           if (res1 === 'confirm') {
             // todo 真实提现
             this.moneyUrl = res.data
-            var reqTask = wx.request({
-              url: this.moneyUrl,
-              data: {},
-              header: {'content-type':'application/json'},
-              method: 'GET',
-              dataType: 'json',
-              responseType: 'text',
-              success: (result)=>{
-                
-              },
-              fail: ()=>{},
-              complete: ()=>{}
-            });
+            // let { res } = await this.$wxUtils.requestGet(this.$api.GetPlatFormLoginUrl, this)
+            // var reqTask = wx.request({
+            //   url: this.moneyUrl,
+            //   data: {},
+            //   header: {'content-type':'application/json'},
+            //   method: 'GET',
+            //   dataType: 'json',
+            //   responseType: 'text',
+            //   success: (result)=>{
 
-
-
+            //   },
+            //   fail: ()=>{},
+            //   complete: ()=>{}
+            // });
           }
         })
         // wx.showToast({

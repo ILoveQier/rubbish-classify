@@ -1,15 +1,15 @@
 {
   "pages": [
     "pages/home/self/main",
-    "pages/home/main",
+    "pages/center/managerReview/main",
     "pages/index/main",
+    "pages/home/main",
+    "pages/center/main",
     "pages/center/managerBook/main",
     "pages/center/personalBook/main",
-    "pages/center/main",
     "pages/home/book/main",
     "pages/index/user/main",
     "pages/index/manager/main",
-    "pages/center/managerReview/main",
     "pages/center/personalMoney/main",
     "pages/home/self/userInfo/main",
     "pages/center/personalLoc/main",

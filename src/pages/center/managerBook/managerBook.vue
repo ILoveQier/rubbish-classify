@@ -108,14 +108,14 @@ export default {
   async onShow() {
     this.status = ''
     // TODO 获取用户订单
-    let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status })
+    let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status, userType: 1 })
     this.books = data.data
   },
   methods: {
     async getBookStatus(type) {
       this.status = type
       // TODO 根据不同状态 获取用户订单
-      let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status })
+      let { data } = await this.$wxUtils.request(this.$api.GetCurrentUserOrders, this, { pageNum: 1, pageSize: 10, status: this.status, userType: 1 })
       this.books = data.data
     },
     goDetail(book) {
