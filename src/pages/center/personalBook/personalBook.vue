@@ -37,7 +37,7 @@
               <span style="margin-right:30rpx">{{appointItem.typeName}}</span>
               <span style="margin-right:30rpx">{{appointItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">{{appointItem.estimatePrices}}</span>
+              <span style="color:#FF915A;">{{appointItem.bonus}}</span>
             </div>
             <div class="status">
               <span v-if="book.status === '待接单'"
@@ -66,7 +66,7 @@
               <span style="margin-right:30rpx">{{actualItem.typeName}}</span>
               <span style="margin-right:30rpx">{{actualItem.quantity}}KG</span>
               <span style="margin-right:10rpx">预估环保金</span>
-              <span style="color:#FF915A;">{{actualItem.estimatePrices}}</span>
+              <span style="color:#FF915A;">{{actualItem.bonus}}</span>
             </div>
           </div>
         </div>
