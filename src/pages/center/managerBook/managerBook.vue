@@ -8,9 +8,9 @@
         <div :class="{'selected':status === '待接单'}"
              class="nav"
              @click="getBookStatus('待接单')">未确认订单</div>
-        <div :class="{'selected':status === '已确认'}"
+        <div :class="{'selected':status === '已接单'}"
              class="nav"
-             @click="getBookStatus('已确认')">已确认订单</div>
+             @click="getBookStatus('已接单')">已确认订单</div>
         <div :class="{'selected':status === '已取消'}"
              class="nav"
              @click="getBookStatus('已取消')">已取消</div>
@@ -58,8 +58,8 @@
             <div class="status">
               <span v-if="book.status === '待接单'"
                     style="color:#FF995E">待接单</span>
-              <span v-if="book.status === '已确认'"
-                    style="color:#FF995E">已确认</span>
+              <span v-if="book.status === '已接单'"
+                    style="color:#FF995E">已接单</span>
               <span v-if="book.status === '已取消'"
                     style="color:#999">已取消</span>
               <span v-if="book.status === '已完成'"
@@ -67,11 +67,11 @@
             </div>
           </div>
           <div class="book-confirm"
-               v-if="book.status === '待接单'||book.status === '已确认'">
+               v-if="book.status === '待接单'||book.status === '已接单'">
             <button @click.stop="confirmBook(book)"
                     v-if="book.status === '待接单'">确认接单</button>
             <button style="color:#999;border-color:#999"
-                    v-else>已确认接单</button>
+                    v-else>已接单</button>
           </div>
           <div class="book-finish"
                v-if="status === '已完成'">
@@ -119,7 +119,6 @@ export default {
       this.books = data.data
     },
     goDetail(book) {
-      // todo 确认一下是已确认还是已接单
       if (book.status === '已接单') {
         wx.navigateTo({
           // TODO 传id

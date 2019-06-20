@@ -7,6 +7,7 @@ const API_BASE_URL = 'https://testtra.treeyee.com' + root;
 
 module.exports = {
   AuthLoginByWeixin: API_BASE_URL + 'auth/login_by_weixin', //微信登录
+  GetPlatFormLoginUrl: API_BASE_URL + 'auth/getPlatFormLoginUrl', //环保金提现
   GetCheckCodeByPhone: API_BASE_URL + 'auth/getCheckCodeByPhone', //获取验证码
   UserRegister: API_BASE_URL + 'auth/register', //普通用户注册
   SorterBind: API_BASE_URL + 'auth/sorterBind', //分拣员登录
@@ -25,4 +26,8 @@ module.exports = {
   SorterConfirm: API_BASE_URL + 'recycle/sorterConfirm', //分拣员确认接单
   UpdateSorterConfirmTime: API_BASE_URL + 'recycle/updateSorterConfirmTime', //分拣员确认上门时间
   AuditChecklist: API_BASE_URL + 'recycle/auditChecklist', //分拣员确认审核预约订单
+  // 分拣员自主投放
+  CreateSelfhelpList: API_BASE_URL + 'recycle/createSelfhelpList', //分拣员创建自主投放清单
+  GetAllUserBaseInfo: API_BASE_URL + 'recycle/getAllUserBaseInfo', //分拣员获取所有用户的姓名、电话、地址
+  GetAllRubbishPoint: API_BASE_URL + 'recycle/getAllRubbishPoint', //分拣员获取所有垃圾投放点信息
 };
