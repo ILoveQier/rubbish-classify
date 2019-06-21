@@ -58,7 +58,7 @@
             <span>个人信息</span>
           </div>
           <div class="flow-item"
-               @click="goDetail('personalLoc')">
+               @click="goDetail('modifyLoc')">
             <img src="cloud://rubbish-fq7sa.7275-rubbish-fq7sa/images/loc-manage.png">
             <span>地址管理</span>
           </div>
@@ -120,6 +120,12 @@ export default {
   },
   methods: {
     goDetail(type) {
+      if (type === 'modifyLoc') {
+        wx.navigateTo({
+          url: '/pages/components/modifyLoc/main?roleObj=' + JSON.stringify(this.roleObj),
+        })
+        return
+      }
       wx.navigateTo({
         url: '/pages/center/' + type + '/main?roleObj=' + JSON.stringify(this.roleObj),
       })

@@ -4,7 +4,7 @@
       <div class="user-info">
         <div class="info-detail">
           <div class="info-nick">
-            <span>{{roleObj.nickName}}</span>
+            <span>{{roleObj.realName}}</span>
             <span>{{roleObj.phone}}</span>
           </div>
           <div class="info-loc">
@@ -64,7 +64,7 @@
                :key="i"
                class="recycle-item">
             <span style="width:35%">{{item.detail}}({{item.quantity}}{{item.unit}})</span>
-            <span style="width:20%;margin-right:220rpx">{{item.bonus}}积分</span>
+            <span style="width:20%;margin-right:200rpx">{{item.bonus}}环保金</span>
             <span class="minus"
                   @click="deleteRecycle(item,i)"></span>
           </div>
@@ -163,7 +163,7 @@ export default {
     },
     modifyLoc() {
       wx.navigateTo({
-        url: '/pages/home/book/modifyLoc/main?roleObj=' + JSON.stringify(this.roleObj),
+        url: '/pages/components/modifyLoc/main?roleObj=' + JSON.stringify(this.roleObj),
       })
     },
     async confirmBook() {
@@ -176,7 +176,7 @@ export default {
         this.$wxUtils.showModal({ content: '请选择要回收的物品', showCancel: false })
         return
       }
-      this.$wxUtils.showModal({ title: '温馨提示', content: '厨余垃圾不予上门回收服务可回收垃圾满5kg才可预约上门回收（除废旧大家电）回收物体不明确时请参考分类', confirmText: '立即预约' })
+      this.$wxUtils.showModal({ title: '温馨提示', content: '厨余垃圾不予上门回收服务可回收垃圾满2kg才可预约上门回收（除废旧大家电）回收物体不明确时请参考分类', confirmText: '立即预约' })
         .then(async res => {
           if (res === 'confirm') {
             // TODO 创建预约单

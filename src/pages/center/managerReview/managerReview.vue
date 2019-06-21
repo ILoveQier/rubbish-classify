@@ -87,7 +87,7 @@
              :key="i"
              class="recycle-item">
           <span style="width:35%">{{item.detail}}({{item.quantity}}{{item.unit}})</span>
-          <span style="width:20%;margin-right:220rpx">{{item.bonus}}积分</span>
+          <span style="width:20%;margin-right:200rpx">{{item.bonus}}环保金</span>
           <span class="minus"
                 @click="deleteRecycle(item,i)"></span>
         </div>

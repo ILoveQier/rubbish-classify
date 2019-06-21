@@ -12,10 +12,9 @@
     "pages/index/manager/main",
     "pages/center/personalMoney/main",
     "pages/home/self/userInfo/main",
-    "pages/center/personalLoc/main",
     "pages/center/personalInfo/main",
     "pages/home/self/otherLoc/main",
-    "pages/home/book/modifyLoc/main",
+    "pages/components/modifyLoc/main",
     "pages/catagory/main"
   ],
   "window": {
