@@ -10,7 +10,7 @@
     </div>
     <div class="item">
       <span>登录密码</span>
-      <input type="number"
+      <input type="text"
              maxlength="15"
              v-model="password"
              placeholder="请输入"
