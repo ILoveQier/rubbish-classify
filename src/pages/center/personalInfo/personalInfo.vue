@@ -44,7 +44,7 @@
                placeholder-style='font-size:20rpx;'>
         <div v-if="isGetQR"
              style="font-size:30rpx;margin-left:30rpx;color:#999">
-          倒计时：{{timer}}s
+          {{timer}}s
         </div>
         <button @click="getQR"
                 v-else>获取</button>
@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       isGetQR: false,
-      timer: 30,
+      timer: 60,
       timeOpt: null,
       roleObj: {},
       user: {
