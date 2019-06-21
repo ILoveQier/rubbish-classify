@@ -3,7 +3,7 @@
     <div class="center-info">
       <img :src="roleObj.avatarUrl">
       <div class="info-detail">
-        <span>{{roleObj.userName}}</span>
+        <span>{{roleObj.realName}}</span>
         <div v-if="role==0">
           <span>当前可提现环保金：{{roleObj.envirTotal}}</span>
           <div>

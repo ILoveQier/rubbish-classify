@@ -59,9 +59,12 @@ export default {
             }
           }
         })
+      } else if (role === -1) {
+        this.temp = false
       } else {
+        //token有效 并且有用户权限
+        wx.setStorageSync('role', role)
         this.$store.state.role = role
-        //token有效
         wx.switchTab({
           url: "/pages/home/main",
         })
