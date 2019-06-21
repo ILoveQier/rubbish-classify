@@ -135,7 +135,6 @@ export default {
     async pickChange(e, type) {
       let val = e.mp.detail.value
       if (type === 'building') {
-        // todo building 是干嘛的 字段在哪里
         this.loc.buildingNum = this.addrObj.buildings[val]
         return
       }
