@@ -101,7 +101,7 @@
   </div>
 </template>
 <script>
-import DrawerScreen from './drawerScreen'
+import DrawerScreen from '../../components/drawerScreen'
 export default {
   data() {
     return {

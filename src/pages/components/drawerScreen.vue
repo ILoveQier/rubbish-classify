@@ -21,7 +21,6 @@
         <div class="drawer-wrap">
           <div v-if="tab===1"
                class="drawer-inner">
-            <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
             <span>物品</span>
             <div class="goods-wrap">
               <div v-for="(smallGood,i) in smallGoods"

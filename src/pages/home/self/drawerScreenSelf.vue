@@ -100,7 +100,6 @@
           </div>
           <div v-else-if="tab===4"
                class="drawer-inner">
-            <span style="color:#999;font-size:25rpx;margin-bottom:20rpx">5公斤以上纸类、纺织物、金属、塑料等废品</span>
             <span>重量</span>
             <div class="self-weight">
               <input type="number"

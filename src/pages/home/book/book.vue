@@ -70,8 +70,9 @@
           </div>
         </div>
         <div class="leave-message">
-          <textarea placeholder="留言备注：可描述物品状态、特殊要求等"
-                    placeholder-style='font-size:30rpx'></textarea>
+          <input placeholder="留言备注：可描述物品状态、特殊要求等"
+                 type="text"
+                 placeholder-style='font-size:30rpx'></input>
         </div>
       </div>
     </div>
@@ -93,7 +94,7 @@
   </div>
 </template>
 <script>
-import DrawerScreen from './drawerScreen'
+import DrawerScreen from '../../components/drawerScreen'
 import { mapState } from "vuex"
 
 export default {

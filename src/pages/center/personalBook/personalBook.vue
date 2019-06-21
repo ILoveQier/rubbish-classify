@@ -8,9 +8,9 @@
         <div :class="{'selected':status === '待接单'}"
              class="nav"
              @click="getBookStatus('待接单')">待接单</div>
-        <div :class="{'selected':status === '已确认'}"
+        <div :class="{'selected':status === '已接单'}"
              class="nav"
-             @click="getBookStatus('已确认')">已确认</div>
+             @click="getBookStatus('已接单')">已接单</div>
         <div :class="{'selected':status === '已取消'}"
              class="nav"
              @click="getBookStatus('已取消')">已取消</div>
@@ -42,8 +42,8 @@
             <div class="status">
               <span v-if="book.status === '待接单'"
                     style="color:#FF995E">待接单</span>
-              <span v-if="book.status === '已确认'"
-                    style="color:#FF995E">已确认</span>
+              <span v-if="book.status === '已接单'"
+                    style="color:#FF995E">已接单</span>
               <span v-if="book.status === '已取消'"
                     style="color:#999">已取消</span>
               <span v-if="book.status === '已完成'"
@@ -51,7 +51,7 @@
             </div>
           </div>
           <div class="book-cancel"
-               v-if="book.status === '待接单' || book.status === '已确认'">
+               v-if="book.status === '待接单' || book.status === '已接单'">
             <button @click="cancelBook(book.id,book.status)">取消预约</button>
           </div>
           <div class="book-finish"

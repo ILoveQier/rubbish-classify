@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
-    <web-view :src='urlss'
-              v-if="urlss"></web-view>
+    <!-- <web-view :src='urlss'
+              v-if="urlss"></web-view> -->
     <div v-if="role==0"
          class="home-item">
       <span>可回收垃圾0.8元/公斤兑换环保金
@@ -36,26 +36,28 @@ export default {
       this.urlss = url + '?amount=1.1'
       let { data } = await this.$wxUtils.request(this.$api.GetGreenMoneyHistory, this, { pageNum: 1, pageSize: 10 })
       let amount = 2
-      let { res } = await this.$wxUtils.request(this.$api.GetPlatFormLoginUrl, this, { amount })
-      if (res.errno === 0) {
-        this.$wxUtils.showModal({
-          title: '温馨提示',
-          content: '单次提现金额至少1元并不超过200元  1<提现金额≤200',
-          confirmText: '立即提现'
-        }).then(async res1 => {
-          if (res1 === 'confirm') {
-            // todo 真实提现
-            this.moneyUrl = res.data
-          }
-        })
-        // wx.showToast({
-        //   title: '提现成功',
-        //   duration: 1500,
-        //   mask: true,
-        // });
-      } else {
-        this.$wxUtils.showModal({ content: res.errmsg, showCancel: false })
-      }
+      let { data: data1, res } = await this.$wxUtils.request(this.$api.GetPlatFormLoginUrl, this, { amount })
+      let { res: res1 } = await this.$wxUtils.request(data1, this)
+      this.$wxUtils.showModal({ content: res.errmsg })
+      // if (res.errno === 0) {
+      //   this.$wxUtils.showModal({
+      //     title: '温馨提示',
+      //     content: '单次提现金额至少1元并不超过200元  1<提现金额≤200',
+      //     confirmText: '立即提现'
+      //   }).then(async res1 => {
+      //     if (res1 === 'confirm') {
+      //       // todo 真实提现
+      //       this.moneyUrl = res.data
+      //     }
+      //   })
+      //   // wx.showToast({
+      //   //   title: '提现成功',
+      //   //   duration: 1500,
+      //   //   mask: true,
+      //   // });
+      // } else {
+      //   this.$wxUtils.showModal({ content: res.errmsg, showCancel: false })
+      // }
     },
     goBook() {
       wx.navigateTo({

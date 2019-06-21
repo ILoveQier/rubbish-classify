@@ -85,7 +85,7 @@ export default {
         let createTime = new Date()
         wx.setStorageSync('createTime', createTime.getTime())
         // 如果没有角色信息 就让他注册或者登陆
-        if (data.roleType === null) {
+        if (data.roleType === -1) {
           this.temp = false
         } else {
           wx.switchTab({
